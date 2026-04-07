@@ -19,7 +19,7 @@ function Hero() {
 <p className="hero-desc">
   MERN Stack Developer with hands-on experience in full-stack projects and machine learning models.
 </p>
-          <a href="/Aditaya_Mishra_Resume.pdf" target="_blank" className="btn">
+          <a href="/Aditaya_Mishra_Resume.pdf" target="_blank" rel="noreferrer" className="btn">
             View Resume
           </a>
           

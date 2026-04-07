@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 function Skills() {
-  const skills = ["React", "Node.js", "MongoDB", "Python", "SQL", "Pandas"];
-
+  
   return (
     <motion.section
   initial={{ opacity: 0, y: 50 }}

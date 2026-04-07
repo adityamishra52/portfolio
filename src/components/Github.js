@@ -18,6 +18,7 @@ function Github() {
         <a 
           href="https://github.com/adityamishra52" 
           target="_blank"
+          rel="noreferrer"
           className="btn"
         >
           Visit GitHub

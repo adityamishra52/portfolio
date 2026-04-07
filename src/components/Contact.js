@@ -23,8 +23,8 @@ function Contact() {
       </div>
 
       <div className="social-links">
-        <a href="https://github.com/adityamishra52" target="_blank"><FaGithub />  GitHub</a>
-        <a href="https://www.linkedin.com/in/aditaya-kumar-mishra" target="_blank"><FaLinkedin /> LinkedIn</a>
+        <a href="https://github.com/adityamishra52" target="_blank" rel="noreferrer"><FaGithub />  GitHub</a>
+        <a href="https://www.linkedin.com/in/aditaya-kumar-mishra" target="_blank" rel="noreferrer"><FaLinkedin /> LinkedIn</a>
       </div>
 
       <p className="copyright">
