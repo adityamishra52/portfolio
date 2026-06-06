@@ -1,0 +1,25 @@
+{
+  "short_name": "Aditaya Portfolio",
+  "name": "Aditaya Kumar Mishra | Premium Full Stack MERN Developer Portfolio",
+  "description": "Premium animated portfolio of Aditaya Kumar Mishra, Full Stack Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, and modern web products.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0f766e",
+  "background_color": "#070a12",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Aditaya.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}

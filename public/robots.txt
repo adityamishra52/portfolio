@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aditaya-portfolio.vercel.app/sitemap.xml

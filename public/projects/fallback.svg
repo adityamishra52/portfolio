@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Preview unavailable</title>
+  <desc id="desc">A polished placeholder for missing project screenshots.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0f766e" />
+      <stop offset="0.58" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#be123c" />
+    </linearGradient>
+    <linearGradient id="line" x1="0" x2="1">
+      <stop offset="0" stop-color="#2dd4bf" />
+      <stop offset="1" stop-color="#fb7185" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <g opacity="0.18" stroke="#ffffff">
+    <path d="M0 160H1200M0 320H1200M0 480H1200M0 640H1200" />
+    <path d="M160 0V800M320 0V800M480 0V800M640 0V800M800 0V800M960 0V800" />
+  </g>
+  <rect x="240" y="210" width="720" height="380" rx="28" fill="#020617" fill-opacity="0.5" stroke="#ffffff" stroke-opacity="0.22" />
+  <circle cx="286" cy="258" r="12" fill="#ffffff" fill-opacity="0.72" />
+  <circle cx="326" cy="258" r="12" fill="#ffffff" fill-opacity="0.42" />
+  <circle cx="366" cy="258" r="12" fill="#ffffff" fill-opacity="0.3" />
+  <rect x="300" y="340" width="500" height="16" rx="8" fill="#ffffff" fill-opacity="0.68" />
+  <rect x="300" y="390" width="390" height="16" rx="8" fill="#ffffff" fill-opacity="0.38" />
+  <rect x="300" y="440" width="540" height="16" rx="8" fill="#ffffff" fill-opacity="0.28" />
+  <rect x="300" y="510" width="260" height="8" rx="4" fill="url(#line)" />
+  <text x="600" y="660" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" text-anchor="middle">Preview unavailable</text>
+</svg>
