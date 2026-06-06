@@ -1,0 +1,15 @@
+/* TEAM */
+Owner: Aditaya Kumar Mishra
+Role: Full Stack Developer
+Contact: adityamishra5214352@gmail.com
+Location: India
+LinkedIn: https://www.linkedin.com/in/aditaya-kumar-mishra
+GitHub: https://github.com/adityamishra52
+
+/* SITE */
+Title: Aditaya Kumar Mishra Portfolio
+URL: https://aditaya-portfolio.vercel.app
+Built with: React, Vite, Tailwind CSS, JavaScript
+Focus: MERN stack development, SEO, website testing, AI web apps, dashboards, portfolio and business websites
+Language: English
+Last update: 2026-06-07

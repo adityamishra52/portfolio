@@ -51,18 +51,28 @@ function ProjectDetails() {
     );
   }
 
+  const previewImage = project.preview || "/projects/fallback.svg";
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": project.github ? "SoftwareSourceCode" : "SoftwareApplication",
-    name: project.title,
+    "@type": ["CreativeWork", project.github ? "SoftwareSourceCode" : "SoftwareApplication"],
+    "@id": `${siteUrl}/projects/${project.slug}#project`,
+    name: project.slug === "support-kindness" ? "Support Kindness" : project.title,
+    alternateName: project.slug === "support-kindness" ? "Care Contribution" : undefined,
     url: project.live || `${siteUrl}/projects/${project.slug}`,
     codeRepository: project.github,
-    creator: { "@type": "Person", name: profile.name },
+    creator: {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person`,
+      name: profile.name,
+      alternateName: profile.aliases,
+      url: siteUrl,
+    },
     description: project.description,
     programmingLanguage: project.tech,
+    applicationCategory: project.category,
     keywords: project.tech.join(", "),
+    image: previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`,
   };
-  const previewImage = project.preview || "/projects/fallback.svg";
   const galleryImages = useMemo(() => {
     const uniqueImages = [...new Set([...(project.gallery || []), previewImage])];
     return uniqueImages.filter((image) => image !== previewImage).slice(0, 3);
@@ -94,6 +104,9 @@ function ProjectDetails() {
         title={project.title}
         path={`/projects/${project.slug}`}
         description={project.description}
+        keywords={[project.title, project.category, ...project.tech]}
+        image={previewImage}
+        imageAlt={project.previewAlt || `${project.title} project preview`}
         jsonLd={jsonLd}
       />
       <section className="page-section">

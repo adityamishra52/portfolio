@@ -34,6 +34,7 @@ export default function ProjectImage({ src, alt, className = "", maxHeight = "",
         src={srcFinal}
         alt={alt}
         loading="lazy"
+        decoding="async"
         onLoad={handleLoad}
         onError={handleError}
         className={`w-full h-full object-cover transition-transform duration-500 ${loaded ? "" : "opacity-0"}`}

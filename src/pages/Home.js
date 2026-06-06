@@ -48,7 +48,14 @@ function Home() {
               >
                 <div className="hero-profile glass-panel">
                   <div className="absolute inset-8 rounded-3xl border border-slate-200/70 bg-grid opacity-70 dark:border-white/10" />
-                  <img src={profile.image} alt="Aditaya Kumar Mishra" className="relative z-10 max-w-full aspect-square object-cover" />
+                  <img
+                    src={profile.image}
+                    alt="Aditaya Kumar Mishra"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                    className="relative z-10 max-w-full aspect-square object-cover"
+                  />
                   <div className="absolute right-6 top-6 rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm font-black text-teal-700 shadow-soft backdrop-blur dark:bg-slate-950/70 dark:text-teal-300">
                     Open to work
                   </div>

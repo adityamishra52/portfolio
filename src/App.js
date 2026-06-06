@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Skills from "./pages/Skills";
-import Projects from "./pages/Projects";
-import ProjectDetails from "./pages/ProjectDetails";
-import Gallery from "./pages/Gallery";
-import Experience from "./pages/Experience";
-import Education from "./pages/Education";
-import Contact from "./pages/Contact";
-import HireMe from "./pages/HireMe";
-import Admin from "./pages/Admin";
-import NotFound from "./pages/NotFound";
+
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Skills = lazy(() => import("./pages/Skills"));
+const Projects = lazy(() => import("./pages/Projects"));
+const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
+const Gallery = lazy(() => import("./pages/Gallery"));
+const Experience = lazy(() => import("./pages/Experience"));
+const Education = lazy(() => import("./pages/Education"));
+const Contact = lazy(() => import("./pages/Contact"));
+const HireMe = lazy(() => import("./pages/HireMe"));
+const Admin = lazy(() => import("./pages/Admin"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -35,20 +36,22 @@ function AppShell({ theme, onThemeToggle }) {
       <ScrollToTop />
       {!isAdmin && <Navbar theme={theme} onThemeToggle={onThemeToggle} />}
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/skills" element={<Skills />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:slug" element={<ProjectDetails />} />
-          <Route path="/experience" element={<Experience />} />
-          <Route path="/education" element={<Education />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/hire-me" element={<HireMe />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/admin-aditaya" element={<Admin />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="page-section text-slate-950 dark:text-white">Loading page...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/skills" element={<Skills />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:slug" element={<ProjectDetails />} />
+            <Route path="/experience" element={<Experience />} />
+            <Route path="/education" element={<Education />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/hire-me" element={<HireMe />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/admin-aditaya" element={<Admin />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       {!isAdmin && <Footer />}
     </div>

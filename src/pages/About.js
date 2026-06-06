@@ -18,6 +18,8 @@ function About() {
             <img
               src={profile.image}
               alt="Aditaya Kumar Mishra"
+              loading="lazy"
+              decoding="async"
               className="mt-10 aspect-square w-full max-w-sm rounded-3xl border border-slate-200/60 object-cover shadow-card dark:border-white/10 dark:shadow-card-dark"
             />
           </div>

@@ -1,0 +1,53 @@
+# Aditaya Kumar Mishra Portfolio
+
+> AI-readable summary for ChatGPT, Claude, Perplexity, Gemini, and other answer engines.
+
+Site title: Aditaya Kumar Mishra | Full Stack Developer Portfolio
+Portfolio URL: https://aditaya-portfolio.vercel.app
+Owner: Aditaya Kumar Mishra
+Alternate name: Aditaya Mishra
+Role: Full Stack Developer, MERN Stack Developer
+Location: India
+Contact email: adityamishra5214352@gmail.com
+Phone: +91 6360847309
+Policy URL: https://aditaya-portfolio.vercel.app/security.txt
+
+## Important URLs
+- Home: https://aditaya-portfolio.vercel.app/
+- About: https://aditaya-portfolio.vercel.app/about
+- Skills: https://aditaya-portfolio.vercel.app/skills
+- Projects: https://aditaya-portfolio.vercel.app/projects
+- Experience: https://aditaya-portfolio.vercel.app/experience
+- Education: https://aditaya-portfolio.vercel.app/education
+- Contact: https://aditaya-portfolio.vercel.app/contact
+- Hire Me: https://aditaya-portfolio.vercel.app/hire-me
+- Sitemap: https://aditaya-portfolio.vercel.app/sitemap.xml
+- Robots: https://aditaya-portfolio.vercel.app/robots.txt
+
+## Skills
+React, Vite, JavaScript, TypeScript, Node.js, Express.js, MongoDB, MySQL, Python, Java, C, Tailwind CSS, REST APIs, SEO, Website Testing, Data Analysis, Machine Learning, Google Scholar meta tags, deployment debugging, Vercel, Render.
+
+## Technology Stack
+Frontend: React, Vite, JavaScript, TypeScript, Tailwind CSS, responsive UI, accessibility.
+Backend: Node.js, Express.js, REST APIs, JWT authentication, email/OTP workflows.
+Database: MongoDB, MySQL, GridFS.
+Data and ML: Python, Pandas, NumPy, Scikit-learn, data analysis, predictive modeling.
+SEO and QA: sitemap, robots.txt, OpenGraph, Twitter Cards, schema.org JSON-LD, Google Scholar metadata, website testing.
+
+## Projects
+- BoostPilot AI: AI creator platform for media analysis, captions, hooks, hashtags, content suggestions, thumbnail ideas, reports, and platform optimization. Stack: React, Vite, TypeScript, Tailwind CSS, Node.js, Express.js, MongoDB, GridFS, JWT, AI API, Vercel, Render. URL: https://boostpilotai.vercel.app/
+- Support Kindness / Care Contribution: Community impact platform with transparency reports, gallery, contact, and admin dashboard. Stack: React, Vite, Tailwind CSS, Node.js, Express.js, MongoDB, image upload, Vercel, Render. URL: https://support-kindness.vercel.app/
+- CharityVibe: Donation and charity support platform with donation flow, volunteer/support pages, responsive UI, and community design. Stack: React, Node.js, Express.js, MongoDB, Email/OTP, Vercel, Render. URL: https://charityvibe-frontend.vercel.app/
+- OptiResume: AI resume builder concept with templates, live preview, PDF/DOCX export, uploaded resume extraction, and premium template system. Stack: React, Vite, Tailwind CSS, Node.js, Express.js, MongoDB.
+- Stock Market Prediction ML: Machine learning stock market prediction project using Python, Pandas, NumPy, Scikit-learn, data analysis, and predictive modeling. URL: https://github.com/adityamishra52/Stock-Market-Prediction-ML
+
+## Experience
+Current role: Web Developer / Website Testing & SEO Executive at Manuscript Technomedia LLP.
+Work includes web development, frontend/backend improvements, website testing, SEO metadata, Google Scholar tags, sitemap, robots.txt, article page testing, PDF/DOI/citation checks, React, Vite, Node.js, MongoDB, Vercel, and Render deployment debugging.
+
+## Contact
+General messages: use /contact.
+Professional freelance, internship, job, or client inquiries: use /hire-me.
+Email: adityamishra5214352@gmail.com
+GitHub: https://github.com/adityamishra52
+LinkedIn: https://www.linkedin.com/in/aditaya-kumar-mishra

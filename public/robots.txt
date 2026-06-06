@@ -1,4 +1,38 @@
+User-agent: Googlebot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin-aditaya
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin-aditaya
+
 User-agent: *
 Allow: /
+Disallow: /admin-aditaya
 
 Sitemap: https://aditaya-portfolio.vercel.app/sitemap.xml
+Host: https://aditaya-portfolio.vercel.app

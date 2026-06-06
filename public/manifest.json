@@ -1,25 +1,39 @@
 {
   "short_name": "Aditaya Portfolio",
-  "name": "Aditaya Kumar Mishra | Premium Full Stack MERN Developer Portfolio",
-  "description": "Premium animated portfolio of Aditaya Kumar Mishra, Full Stack Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, and modern web products.",
+  "name": "Aditaya Kumar Mishra | Full Stack Developer Portfolio",
+  "description": "Portfolio of Aditaya Kumar Mishra, Full Stack Developer building MERN apps, SEO-ready websites, AI web apps, dashboards, and testing-focused products.",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "portrait-primary",
-  "theme_color": "#0f766e",
-  "background_color": "#070a12",
+  "theme_color": "#14b8a6",
+  "background_color": "#eefdfa",
+  "categories": ["portfolio", "business", "productivity", "developer"],
+  "lang": "en-IN",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/favicon-16x16.png",
       "type": "image/png",
-      "sizes": "512x512",
+      "sizes": "16x16"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
       "purpose": "any maskable"
     },
     {
-      "src": "/Aditaya.png",
+      "src": "/og-image.png",
       "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any"
+      "sizes": "1200x630"
     }
   ]
 }

@@ -53,7 +53,7 @@ function Hero() {
 
         <div className="hero-visual" aria-label="Profile card">
           <div className="availability-pill">Open to work</div>
-          <img src="/Aditaya.png" alt="Aditaya Kumar Mishra" className="profile-img" />
+          <img src="/Aditaya.png" alt="Aditaya Kumar Mishra" className="profile-img" loading="eager" decoding="async" fetchPriority="high" />
           <div className="hero-card">
             <span>Core stack</span>
             <strong>React, Node.js, MongoDB, AI APIs</strong>
