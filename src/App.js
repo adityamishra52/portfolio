@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import AnalyticsProvider from "./components/AnalyticsProvider";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { initAnalytics, trackPageView } from "./lib/analytics";
+import { initClarity } from "./lib/clarity";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -31,11 +32,16 @@ function AppShell({ theme, onThemeToggle }) {
   const location = useLocation();
   const isAdmin = location.pathname === "/admin-aditaya";
 
+  useEffect(() => {
+    const path = `${location.pathname}${location.search}`;
+    // Route-level page tracking starts here for React Router navigation.
+    trackPageView(path);
+  }, [location.pathname, location.search]);
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       <div className="fixed inset-0 -z-10 bg-page" />
       <ScrollToTop />
-      <AnalyticsProvider />
       {!isAdmin && <Navbar theme={theme} onThemeToggle={onThemeToggle} />}
       <main>
         <Suspense fallback={<div className="page-section text-slate-950 dark:text-white">Loading page...</div>}>
@@ -68,6 +74,12 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    // App startup initialization for Google Analytics and Microsoft Clarity.
+    initAnalytics();
+    initClarity();
+  }, []);
 
   return (
     <BrowserRouter>

@@ -4,9 +4,20 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   esbuild: {
-    loader: "jsx",
-    include: /src\/.*\.js$/,
+    loader: "tsx",
+    include: /src\/.*\.[jt]sx?$/,
     exclude: [],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          motion: ["framer-motion"],
+          icons: ["react-icons/fi", "react-icons/fa"],
+        },
+      },
+    },
   },
   server: {
     host: "0.0.0.0",

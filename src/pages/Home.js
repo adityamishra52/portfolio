@@ -6,7 +6,7 @@ import ProjectCard from "../components/ProjectCard";
 import { profile, skills } from "../data/portfolio";
 import { projects } from "../data/projects";
 import useImagePreload from "../utils/useImagePreload";
-import { trackEvent } from "../utils/analytics";
+import { trackEvent } from "../lib/analytics";
 
 function Home() {
   useImagePreload(projects.slice(0, 3).map((project) => project.preview).filter(Boolean));
@@ -32,15 +32,32 @@ function Home() {
                 <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">{profile.intro}</p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Link className="btn-primary" to="/projects">
+                  <Link className="btn-primary" to="/projects" onClick={() => trackEvent("Navigation", "Menu Click", "Home View Projects")}>
                     View Projects <FiArrowRight />
                   </Link>
-                  <Link className="btn-secondary" to="/contact">
+                  <Link className="btn-secondary" to="/contact" onClick={() => trackEvent("Navigation", "Menu Click", "Home Contact Me")}>
                     Contact Me <FiMail />
                   </Link>
-                  <a className="btn-secondary" href={profile.resume} target="_blank" rel="noreferrer" onClick={() => trackEvent("resume_download", { location: "home-hero" })}>
-                    Resume <FiDownload />
-                  </a>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    {/* Resume analytics are tracked here for preview and explicit download actions. */}
+                    <a
+                      className="btn-secondary"
+                      href={profile.resume}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => trackEvent("Resume", "Resume Preview", "Home Hero")}
+                    >
+                      Preview Resume <FiDownload />
+                    </a>
+                    <a
+                      className="btn-secondary"
+                      href={profile.resume}
+                      download
+                      onClick={() => trackEvent("Resume", "Resume Download", "Home Hero")}
+                    >
+                      Download PDF <FiDownload />
+                    </a>
+                  </div>
                 </div>
               </motion.div>
 
@@ -58,6 +75,8 @@ function Home() {
                     loading="eager"
                     decoding="async"
                     fetchPriority="high"
+                    width="700"
+                    height="700"
                     className="relative z-10 max-w-full aspect-square object-cover"
                   />
                   <div className="absolute right-6 top-6 rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm font-black text-teal-700 shadow-soft backdrop-blur dark:bg-slate-950/70 dark:text-teal-300">

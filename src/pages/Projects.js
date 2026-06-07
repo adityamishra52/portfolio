@@ -4,6 +4,7 @@ import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
 import ProjectImage from "../components/ProjectImage";
 import { projects } from "../data/projects";
+import { trackEvent } from "../lib/analytics";
 
 function Projects() {
   const containerVariants = {
@@ -84,6 +85,7 @@ function Projects() {
                 <Link
                   to={`/projects/${project.slug}`}
                   className="group relative block overflow-hidden rounded-2xl bg-slate-900 shadow-card transition hover:-translate-y-1 dark:shadow-card-dark"
+                  onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:visual-overview`)}
                 >
                   <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
                     <ProjectImage

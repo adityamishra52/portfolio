@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 import { navItems, profile } from "../data/portfolio";
+import { trackEvent } from "../lib/analytics";
 
 function Navbar({ theme, onThemeToggle }) {
   const [open, setOpen] = useState(false);
@@ -16,7 +17,7 @@ function Navbar({ theme, onThemeToggle }) {
   return (
     <header className="sticky top-4 z-50 mx-auto w-[min(1220px,calc(100%-24px))]">
       <nav className="glass-panel flex items-center justify-between gap-3 px-3 py-3">
-        <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
+        <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => { setOpen(false); trackEvent("Navigation", "Menu Click", "Brand Home"); }}>
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-rose-500 font-black text-white shadow-glow">
             A
           </span>
@@ -30,7 +31,7 @@ function Navbar({ theme, onThemeToggle }) {
 
         <div className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} className={linkClass}>
+            <NavLink key={item.to} to={item.to} className={linkClass} onClick={() => trackEvent("Navigation", "Menu Click", item.label)}>
               {item.label}
             </NavLink>
           ))}
@@ -40,6 +41,7 @@ function Navbar({ theme, onThemeToggle }) {
           <Link
             to="/hire-me"
             className="hidden rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-5 py-2.5 text-sm font-black text-white shadow-glow transition hover:-translate-y-0.5 sm:inline-flex"
+            onClick={() => trackEvent("Navigation", "Menu Click", "Hire Me CTA")}
           >
             Hire Me
           </Link>
@@ -49,7 +51,10 @@ function Navbar({ theme, onThemeToggle }) {
           <button
             className="icon-btn lg:hidden"
             type="button"
-            onClick={() => setOpen((value) => !value)}
+            onClick={() => {
+              setOpen((value) => !value);
+              trackEvent("Navigation", "Mobile Menu Click", open ? "Close Mobile Menu" : "Open Mobile Menu");
+            }}
             aria-label="Toggle menu"
             aria-expanded={open}
           >
@@ -61,14 +66,14 @@ function Navbar({ theme, onThemeToggle }) {
       {open && (
         <div className="glass-panel mt-2 grid gap-2 p-3 lg:hidden">
           {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} className={linkClass} onClick={() => setOpen(false)}>
+            <NavLink key={item.to} to={item.to} className={linkClass} onClick={() => { setOpen(false); trackEvent("Navigation", "Mobile Menu Click", item.label); }}>
               {item.label}
             </NavLink>
           ))}
           <Link
             to="/hire-me"
             className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-5 py-3 text-center text-sm font-black text-white"
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); trackEvent("Navigation", "Mobile Menu Click", "Hire Me CTA"); }}
           >
             Hire Me
           </Link>

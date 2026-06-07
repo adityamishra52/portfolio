@@ -4,6 +4,7 @@ import { FiMail, FiPhone } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { navItems, profile } from "../data/portfolio";
 import { projects } from "../data/projects";
+import { trackEvent } from "../lib/analytics";
 
 function Footer() {
   const containerVariants = {
@@ -63,6 +64,7 @@ function Footer() {
                   className="rounded-2xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white" 
                   key={item.to} 
                   to={item.to}
+                  onClick={() => trackEvent("Navigation", "Menu Click", `Footer:${item.label}`)}
                 >
                   {item.label}
                 </Link>
@@ -79,6 +81,7 @@ function Footer() {
                   className="rounded-2xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white" 
                   key={project.slug} 
                   to={`/projects/${project.slug}`}
+                  onClick={() => trackEvent("Projects", "Project Card Click", `Footer:${project.slug}`)}
                 >
                   {project.title}
                 </Link>
@@ -102,6 +105,7 @@ function Footer() {
               href={`mailto:${profile.email}`}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("Social", "Email Click", "Footer")}
             >
               <FiMail className="text-lg" />
               <span className="hidden sm:inline">{profile.email}</span>
@@ -112,6 +116,7 @@ function Footer() {
               href={`tel:${profile.phone.replace(/\s/g, "")}`}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("Social", "Phone Click", "Footer")}
             >
               <FiPhone className="text-lg" />
               <span className="hidden sm:inline">{profile.phone}</span>
@@ -126,6 +131,7 @@ function Footer() {
               href={profile.github}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("Social", "GitHub Click", "Footer")}
               aria-label="GitHub"
               title="GitHub"
             >
@@ -136,6 +142,7 @@ function Footer() {
               href={profile.linkedin}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("Social", "LinkedIn Click", "Footer")}
               aria-label="LinkedIn"
               title="LinkedIn"
             >

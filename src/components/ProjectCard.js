@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ProjectImage from "./ProjectImage";
 import { FiArrowUpRight, FiLayers } from "react-icons/fi";
-import { trackEvent } from "../utils/analytics";
+import { trackEvent } from "../lib/analytics";
 
 function ProjectCard({ project, featured = false }) {
   const hasExternalDemo = Boolean(project.live || project.github);
@@ -58,7 +58,8 @@ function ProjectCard({ project, featured = false }) {
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <Link className="btn-primary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "details" })}>
+          {/* Project card analytics are tracked on detail, live demo, and tech stack actions. */}
+          <Link className="btn-primary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", project.slug)}>
             Details <FiArrowUpRight />
           </Link>
           {hasExternalDemo ? (
@@ -67,7 +68,7 @@ function ProjectCard({ project, featured = false }) {
               href={project.live || project.github}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "live-demo" })}
+              onClick={() => trackEvent("Projects", "Live Demo Click", project.slug)}
             >
               Live Demo <FiArrowUpRight />
             </a>
@@ -76,7 +77,7 @@ function ProjectCard({ project, featured = false }) {
               Coming Soon
             </button>
           )}
-          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`} onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "tech-stack" })}>
+          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:tech-stack`)}>
             Tech Stack <FiLayers />
           </Link>
         </div>

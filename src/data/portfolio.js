@@ -7,13 +7,56 @@ export const profile = {
   jobTitle: "Full Stack Developer",
   email: "adityamishra5214352@gmail.com",
   phone: "+91 6360847309",
-  location: "India",
+  location: "Bangalore, Karnataka, India",
   resume: "/Aditaya_Mishra_Resume.pdf",
   image: "/Aditaya.png",
   github: "https://github.com/adityamishra52",
   linkedin: "https://www.linkedin.com/in/aditaya-kumar-mishra",
   intro:
     "I build premium React, Vite, Node.js, MongoDB, AI-powered, and SEO-ready web apps with clean UI, strong routing, reliable deployment, and recruiter/client-friendly product thinking.",
+};
+
+export const professionalProfile = {
+  availability: "Open to Full-Time, Internship, Freelance & Contract Opportunities",
+  workMode: "Remote • Hybrid • On-Site",
+  currentRole: "Website Testing & SEO Executive",
+  company: "Manuscript Technomedia LLP",
+  duration: "April 2026 - Present",
+  specialization: [
+    "Full Stack Development",
+    "Website Testing",
+    "Technical SEO",
+    "AI Tools",
+    "Performance Optimization",
+  ],
+  counters: [
+    { value: 5, suffix: "+", label: "Production-style projects" },
+    { value: 4, suffix: "", label: "Work modes supported" },
+    { value: 24, suffix: "/7", label: "Learning and iteration mindset" },
+  ],
+  timeline: [
+    {
+      period: "April 2026 - Present",
+      title: "Website Testing & SEO Executive",
+      company: "Manuscript Technomedia LLP",
+      detail:
+        "Improving journal platforms, metadata quality, crawl visibility, UI stability, and release readiness across web properties and tools.",
+    },
+    {
+      period: "2025 - 2026",
+      title: "Full Stack Project Building",
+      company: "Independent portfolio and product work",
+      detail:
+        "Built AI tools, community platforms, donation experiences, dashboards, and recruiter-facing portfolio projects with React, Node.js, MongoDB, and Vercel.",
+    },
+    {
+      period: "May 2025 - July 2025",
+      title: "Web Development Internship",
+      company: "SkillDunia",
+      detail:
+        "Worked on MERN workflows, responsive UI, API integration, and database-backed product delivery in a real internship environment.",
+    },
+  ],
 };
 
 export const navItems = [

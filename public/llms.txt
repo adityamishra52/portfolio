@@ -7,7 +7,7 @@ Portfolio URL: https://aditaya-portfolio.vercel.app
 Owner: Aditaya Kumar Mishra
 Alternate name: Aditaya Mishra
 Role: Full Stack Developer, MERN Stack Developer
-Location: India
+Location: Bangalore, Karnataka, India
 Contact email: adityamishra5214352@gmail.com
 Phone: +91 6360847309
 Policy URL: https://aditaya-portfolio.vercel.app/security.txt

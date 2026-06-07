@@ -7,7 +7,7 @@ import { siteUrl, profile } from "../data/portfolio";
 import Lightbox from "../components/Lightbox";
 import ProjectImage from "../components/ProjectImage";
 import useImagePreload from "../utils/useImagePreload";
-import { trackEvent } from "../utils/analytics";
+import { trackEvent } from "../lib/analytics";
 
 const TECH_STACK_GROUPS = [
   {
@@ -136,7 +136,7 @@ function ProjectDetails() {
                   href={project.live || project.github}
                   target="_blank"
                   rel="noreferrer"
-                  onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "hero-live-demo" })}
+                  onClick={() => trackEvent("Projects", "Live Demo Click", `${project.slug}:hero`)}
                 >
                   Live Demo <FiArrowUpRight />
                 </a>
@@ -151,7 +151,7 @@ function ProjectDetails() {
                   href={project.github}
                   target="_blank"
                   rel="noreferrer"
-                  onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "github" })}
+                  onClick={() => trackEvent("Projects", "GitHub Repository Click", project.slug)}
                 >
                   GitHub <FiArrowUpRight />
                 </a>
@@ -305,7 +305,7 @@ function ProjectDetails() {
                 <Link
                   key={item.slug}
                   to={`/projects/${item.slug}`}
-                  onClick={() => trackEvent("project_click", { project_slug: item.slug, target: "related-project" })}
+                  onClick={() => trackEvent("Projects", "Project Card Click", `${item.slug}:related`)}
                   className="glass-panel block p-4 transition hover:-translate-y-1"
                 >
                   <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-900">
