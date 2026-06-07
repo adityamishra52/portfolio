@@ -124,7 +124,7 @@ function Contact() {
   useEffect(() => {
     if (!success) return undefined;
 
-    const timer = window.setTimeout(() => setSuccess(null), 5000);
+    const timer = window.setTimeout(() => setSuccess(null), 8000);
     return () => window.clearTimeout(timer);
   }, [success]);
 
