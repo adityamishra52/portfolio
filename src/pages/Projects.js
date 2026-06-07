@@ -32,7 +32,7 @@ function Projects() {
       <SEO
         title="Projects"
         path="/projects"
-        description="Featured projects by Aditaya Kumar Mishra including BoostPilot AI, Care Contribution, CharityVibe, OptiResume, and Stock Market Prediction ML."
+        description="Featured projects by Aditaya Kumar Mishra including BoostPilot AI, OptiResume, Care Contribution, CharityVibe, and Stock Market Prediction ML."
       />
       <section className="page-section">
         <div className="section-heading">

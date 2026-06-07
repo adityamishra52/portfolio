@@ -55,13 +55,14 @@ function ProjectDetails() {
 
   const previewImage = project.preview || "/projects/fallback.svg";
   useImagePreload([previewImage, ...(project.gallery || []).slice(0, 3)]);
+  const projectUrl = project.live || `${siteUrl}/projects/${project.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["CreativeWork", project.github ? "SoftwareSourceCode" : "SoftwareApplication"],
     "@id": `${siteUrl}/projects/${project.slug}#project`,
     name: project.slug === "support-kindness" ? "Support Kindness" : project.title,
     alternateName: project.slug === "support-kindness" ? "Care Contribution" : undefined,
-    url: project.live || `${siteUrl}/projects/${project.slug}`,
+    url: projectUrl,
     codeRepository: project.github,
     creator: {
       "@type": "Person",
@@ -73,14 +74,30 @@ function ProjectDetails() {
     description: project.description,
     programmingLanguage: project.tech,
     applicationCategory: project.category,
+    operatingSystem: project.live ? "Web" : undefined,
     keywords: project.tech.join(", "),
     image: previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`,
+    sameAs: project.live ? [project.live] : undefined,
   };
-  const galleryImages = useMemo(() => {
-    const uniqueImages = [...new Set([...(project.gallery || []), previewImage])];
-    return uniqueImages.filter((image) => image !== previewImage).slice(0, 3);
-  }, [project.gallery, previewImage]);
-  const lightboxImages = [previewImage, ...galleryImages];
+  const galleryItems = useMemo(() => {
+    const gallery = Array.isArray(project.gallery) ? [...new Set(project.gallery)] : [];
+    if (gallery.length > 0) {
+      return gallery.slice(0, 3).map((image, index) => ({
+        src: image,
+        alt: `${project.title} screenshot ${index + 1}`,
+        placeholder: false,
+        label: null,
+      }));
+    }
+
+    return (project.galleryPlaceholders || []).slice(0, 3).map((label, index) => ({
+      src: "/projects/fallback.svg",
+      alt: `${project.title} placeholder screenshot ${index + 1}`,
+      placeholder: true,
+      label,
+    }));
+  }, [project.gallery, project.galleryPlaceholders, project.title]);
+  const lightboxImages = [previewImage, ...galleryItems.map((item) => item.src)];
   const techStackGroups = useMemo(() => {
     const assigned = new Set();
     const grouped = TECH_STACK_GROUPS.map((group) => {
@@ -129,22 +146,41 @@ function ProjectDetails() {
             {project.summary && (
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-500 dark:text-slate-400">{project.summary}</p>
             )}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <span className="rounded-full border border-teal-200 bg-teal-50 px-4 py-2 text-xs font-black uppercase tracking-wide text-teal-700 dark:border-teal-500/30 dark:bg-teal-500/10 dark:text-teal-300">
+                {project.badgeLabel || (project.live ? "Live Project" : "Case Study")}
+              </span>
+              {project.status && (
+                <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                  Status: {project.status}
+                </span>
+              )}
+            </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               {project.live || project.github ? (
-                <a
-                  className="btn-primary"
-                  href={project.live || project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => trackEvent("Projects", "Live Demo Click", `${project.slug}:hero`)}
-                >
-                  Live Demo <FiArrowUpRight />
-                </a>
-              ) : (
-                <button className="btn-primary opacity-70" type="button" disabled>
-                  Demo Coming Soon
-                </button>
-              )}
+                <>
+                  <a
+                    className="btn-primary"
+                    href={project.live || project.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackEvent("Projects", "Live Demo Click", `${project.slug}:hero`)}
+                  >
+                    Live Demo <FiArrowUpRight />
+                  </a>
+                  {project.live && (
+                    <a
+                      className="btn-secondary"
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => trackEvent("Projects", "Visit Website Click", `${project.slug}:hero`)}
+                    >
+                      Visit Website <FiArrowUpRight />
+                    </a>
+                  )}
+                </>
+              ) : null}
               {project.github && (
                 <a
                   className="btn-secondary"
@@ -154,6 +190,17 @@ function ProjectDetails() {
                   onClick={() => trackEvent("Projects", "GitHub Repository Click", project.slug)}
                 >
                   GitHub <FiArrowUpRight />
+                </a>
+              )}
+              {project.slug === "optiresume" && project.live && (
+                <a
+                  className="btn-primary"
+                  href={project.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackEvent("Projects", "Try OptiResume Click", project.slug)}
+                >
+                  Try OptiResume <FiArrowUpRight />
                 </a>
               )}
             </div>
@@ -197,6 +244,13 @@ function ProjectDetails() {
             </div>
           </div>
         </div>
+
+        {project.overview && (
+          <div className="mt-10 glass-panel p-6">
+            <h2 className="text-2xl font-black text-slate-950 dark:text-white">Project Overview</h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-slate-600 dark:text-slate-300">{project.overview}</p>
+          </div>
+        )}
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <div className="glass-panel p-6">
@@ -264,6 +318,27 @@ function ProjectDetails() {
           ))}
         </div>
 
+        {(project.architecture?.length > 0 || project.problemSolved?.length > 0 || project.roadmap?.length > 0) && (
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {[
+              { title: "Technical Architecture", items: project.architecture || [] },
+              { title: "Problem Solved", items: project.problemSolved || [] },
+              { title: "Future Roadmap", items: project.roadmap || [] },
+            ].map((section) => (
+              <div className="glass-panel p-6" key={section.title}>
+                <h3 className="text-xl font-black text-slate-950 dark:text-white">{section.title}</h3>
+                <ul className="mt-4 grid gap-3">
+                  {section.items.map((item) => (
+                    <li key={item} className="rounded-2xl border border-slate-200/70 bg-white/55 p-4 text-sm leading-6 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
         {project.results?.length > 0 && (
           <div className="mt-10 glass-panel p-6">
             <h3 className="text-xl font-black text-slate-950 dark:text-white">Project Outcome</h3>
@@ -279,20 +354,49 @@ function ProjectDetails() {
 
         <div className="mt-10">
           <h3 className="text-xl font-black text-slate-950 dark:text-white">Project Gallery</h3>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Click any image to view larger.</p>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            {galleryItems.some((item) => item.placeholder)
+              ? "Placeholder cards are shown until final OptiResume screenshots are added."
+              : "Click any image to view larger."}
+          </p>
           <div className="mt-4 grid gap-4 grid-cols-2 md:grid-cols-3">
-            {galleryImages.map((img, i) => (
+            {galleryItems.map((item, i) => (
               <button
-                key={img + i}
+                key={`${item.src}-${item.label || i}`}
                 onClick={() => { setLightboxIndex(i + 1); setLightboxOpen(true); }}
                 type="button"
                 className="overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-white/10 dark:bg-slate-800/60"
               >
-                <ProjectImage src={img} alt={project.title + " screenshot " + (i + 2)} className="w-full h-40" />
+                <div className="relative">
+                  <ProjectImage src={item.src} alt={item.alt} className="h-40 w-full" />
+                  {item.placeholder && (
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-slate-950/80 via-slate-900/35 to-transparent p-4 text-left">
+                      <span className="text-sm font-semibold text-white">{item.label}</span>
+                    </div>
+                  )}
+                </div>
               </button>
             ))}
           </div>
         </div>
+
+        {project.cta?.url && (
+          <div className="mt-10 rounded-3xl border border-teal-200/70 bg-gradient-to-br from-teal-500 to-cyan-600 p-8 text-white shadow-soft">
+            <span className="text-sm font-black uppercase tracking-[0.2em] text-white/80">Call To Action</span>
+            <h3 className="mt-3 text-3xl font-black">{project.cta.heading}</h3>
+            <div className="mt-6">
+              <a
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5"
+                href={project.cta.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackEvent("Projects", "Project CTA Click", project.slug)}
+              >
+                {project.cta.label} <FiArrowUpRight />
+              </a>
+            </div>
+          </div>
+        )}
 
         {relatedProjects.length > 0 && (
           <div className="mt-10">

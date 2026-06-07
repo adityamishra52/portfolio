@@ -124,6 +124,29 @@ function Home() {
 
         <section className="relative overflow-hidden">
           <div className="page-section">
+            <div className="rounded-[2rem] border border-teal-200/70 bg-gradient-to-br from-teal-500 via-cyan-500 to-sky-600 p-8 text-white shadow-soft lg:p-10">
+              <span className="text-sm font-black uppercase tracking-[0.2em] text-white/80">Featured Launch</span>
+              <h2 className="mt-4 text-3xl font-black sm:text-4xl">Build your professional resume with OptiResume</h2>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-white/90">
+                Create, edit, preview, and export recruiter-ready resumes with OptiResume&apos;s live AI-powered builder.
+              </p>
+              <div className="mt-6">
+                <a
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5"
+                  href="https://optiresume-one.vercel.app"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackEvent("Projects", "Launch OptiResume Click", "home-cta")}
+                >
+                  Launch OptiResume <FiArrowRight />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden">
+          <div className="page-section">
             <div className="grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
               <div className="section-heading">
                 <span className="eyebrow">Skills Snapshot</span>

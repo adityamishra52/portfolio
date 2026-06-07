@@ -6,6 +6,8 @@ import { trackEvent } from "../lib/analytics";
 
 function ProjectCard({ project, featured = false }) {
   const hasExternalDemo = Boolean(project.live || project.github);
+  const statusLabel = project.badgeLabel || (hasExternalDemo ? "Live Project" : "Case Study");
+  const externalUrl = project.live || project.github;
 
   return (
     <motion.article
@@ -44,7 +46,7 @@ function ProjectCard({ project, featured = false }) {
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-3 text-xs font-black uppercase tracking-wide text-teal-700 dark:text-teal-300">
           <span>{project.category}</span>
-          <span>{hasExternalDemo ? "Live" : "Case Study"}</span>
+          <span>{statusLabel}</span>
         </div>
         <h3 className="text-2xl font-black text-slate-950 dark:text-white">{project.title}</h3>
         <p className="mt-3 flex-1 leading-7 text-slate-600 dark:text-slate-300">{project.description}</p>
@@ -63,23 +65,49 @@ function ProjectCard({ project, featured = false }) {
             Details <FiArrowUpRight />
           </Link>
           {hasExternalDemo ? (
-            <a
-              className="btn-secondary w-full"
-              href={project.live || project.github}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => trackEvent("Projects", "Live Demo Click", project.slug)}
-            >
-              Live Demo <FiArrowUpRight />
-            </a>
+            <>
+              <a
+                className="btn-secondary w-full"
+                href={externalUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackEvent("Projects", "Live Demo Click", project.slug)}
+              >
+                Live Demo <FiArrowUpRight />
+              </a>
+              <a
+                className="btn-secondary w-full"
+                href={externalUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackEvent("Projects", "Visit Website Click", project.slug)}
+              >
+                Visit Website <FiArrowUpRight />
+              </a>
+            </>
           ) : (
             <button className="btn-secondary w-full opacity-70" type="button" disabled>
-              Coming Soon
+              Case Study
             </button>
           )}
-          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:tech-stack`)}>
+          <Link className="btn-secondary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:tech-stack`)}>
             Tech Stack <FiLayers />
           </Link>
+          {hasExternalDemo ? (
+            <a
+              className="btn-secondary w-full"
+              href={externalUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackEvent("Projects", "Open In New Tab Click", project.slug)}
+            >
+              Open in New Tab <FiArrowUpRight />
+            </a>
+          ) : (
+            <Link className="btn-secondary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", project.slug)}>
+              View Case Study <FiArrowUpRight />
+            </Link>
+          )}
         </div>
       </div>
     </motion.article>
