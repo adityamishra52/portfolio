@@ -9,7 +9,9 @@ import { saveHireRequest } from "../utils/storage";
 const initialForm = {
   name: "",
   email: "",
+  phone: "",
   company: "",
+  subject: "",
   projectType: "Portfolio Website",
   budget: "",
   timeline: "",
@@ -63,7 +65,6 @@ function HireMe() {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [submitError, setSubmitError] = useState("");
-  const [fallbackNotice, setFallbackNotice] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
@@ -88,7 +89,6 @@ function HireMe() {
     event.preventDefault();
     setSuccess("");
     setSubmitError("");
-    setFallbackNotice("");
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -96,14 +96,7 @@ function HireMe() {
     try {
       const result = await saveHireRequest(form);
       setForm(initialForm);
-
-      if (result.source === "database") {
-        setSuccess("Hire request saved successfully. I will review it from the admin dashboard.");
-        return;
-      }
-
-      setFallbackNotice("Database save failed, so this hire request was saved only on this device as a fallback. It will not appear cross-device until the database connection is fixed.");
-      setSubmitError(result.errorMessage || "Could not save your hire request to the database.");
+      setSuccess(result.message || "Hire request saved successfully. I will review it from the admin dashboard.");
     } catch (saveError) {
       setSubmitError(saveError.message || "Could not save your hire request.");
     } finally {
@@ -217,12 +210,22 @@ function HireMe() {
                     <input className="form-input" type="email" value={form.email} onChange={(event) => updateField("email", event.target.value)} placeholder="Enter your email" />
                     {errors.email && <small className="form-error">{errors.email}</small>}
                   </label>
+
+                  <label className="form-label md:col-span-2">
+                    <span>Phone</span>
+                    <input className="form-input" type="tel" value={form.phone} onChange={(event) => updateField("phone", event.target.value)} placeholder="Optional phone number" />
+                  </label>
                 </div>
 
                 <label className="form-label">
                   <span>Company / Organization</span>
                   <input className="form-input" value={form.company} onChange={(event) => updateField("company", event.target.value)} placeholder="Company, startup, or organization" />
                   {errors.company && <small className="form-error">{errors.company}</small>}
+                </label>
+
+                <label className="form-label">
+                  <span>Subject</span>
+                  <input className="form-input" value={form.subject} onChange={(event) => updateField("subject", event.target.value)} placeholder="Short summary of the project or role" />
                 </label>
 
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -263,7 +266,6 @@ function HireMe() {
                 </label>
 
                 {submitError && <p className="rounded-2xl bg-rose-500/10 p-4 font-semibold text-rose-700 dark:text-rose-300">{submitError}</p>}
-                {fallbackNotice && <p className="rounded-2xl bg-amber-500/10 p-4 font-semibold text-amber-700 dark:text-amber-300">{fallbackNotice}</p>}
                 {success && <p className="rounded-2xl bg-emerald-500/10 p-4 font-semibold text-emerald-700 dark:text-emerald-300">{success}</p>}
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

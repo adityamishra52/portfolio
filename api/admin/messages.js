@@ -1,47 +1,34 @@
-const { deleteMessage, listMessages, updateMessageRead } = require("../_lib/messages");
+const { deleteMessage, getOverviewStats, listMessages, updateMessage } = require("../_lib/messages");
 const { sanitizeErrorMessage, sendJson } = require("../_lib/response");
-
-const parseBody = (body) => {
-  if (!body) return {};
-  if (typeof body === "string") return JSON.parse(body);
-  return body;
-};
-
-const assertAdminAccess = (req) => {
-  const adminKey = process.env.VITE_ADMIN_KEY;
-
-  if (!adminKey) {
-    const error = new Error("Missing VITE_ADMIN_KEY on the server.");
-    error.statusCode = 500;
-    throw error;
-  }
-
-  if (req.headers["x-admin-key"] !== adminKey) {
-    const error = new Error("Invalid admin key.");
-    error.statusCode = 401;
-    throw error;
-  }
-};
+const { assertAdminAccess } = require("../_lib/auth");
+const { parseBody } = require("../_lib/request");
 
 module.exports = async (req, res) => {
   try {
     assertAdminAccess(req);
 
     if (req.method === "GET") {
-      const type = req.query.type;
-      const entries = await listMessages(type);
-      return sendJson(res, 200, { success: true, message: "Messages loaded", entries });
+      if (req.query.view === "overview") {
+        const overview = await getOverviewStats();
+        return sendJson(res, 200, { success: true, message: "Overview loaded", overview });
+      }
+
+      const result = await listMessages(req.query);
+      return sendJson(res, 200, { success: true, message: "Messages loaded", ...result });
     }
 
     if (req.method === "PATCH") {
       const body = parseBody(req.body);
-      const entry = await updateMessageRead(body.type, body.id, body.read);
+      const entry = await updateMessage({
+        id: body.id,
+        type: body.type,
+        status: body.status,
+      });
       return sendJson(res, 200, { success: true, message: "Message updated", entry });
     }
 
-    if (req.method === "DELETE") {
-      const { type, id } = req.query;
-      await deleteMessage(type, id);
+    if (req.method === "DELETE" && req.query.id) {
+      await deleteMessage({ type: req.query.type, id: req.query.id });
       return sendJson(res, 200, { success: true, message: "Message deleted" });
     }
 

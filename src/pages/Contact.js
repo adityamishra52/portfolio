@@ -7,7 +7,7 @@ import SEO from "../components/SEO";
 import { profile } from "../data/portfolio";
 import { saveContactMessage } from "../utils/storage";
 
-const initialForm = { name: "", email: "", subject: "", message: "" };
+const initialForm = { name: "", email: "", phone: "", subject: "", message: "" };
 
 const contactCards = [
   { icon: FiMail, label: "Email", value: profile.email, href: `mailto:${profile.email}` },
@@ -54,7 +54,6 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
   const [submitError, setSubmitError] = useState("");
-  const [fallbackNotice, setFallbackNotice] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
@@ -76,7 +75,6 @@ function Contact() {
     event.preventDefault();
     setSuccess("");
     setSubmitError("");
-    setFallbackNotice("");
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -84,14 +82,7 @@ function Contact() {
     try {
       const result = await saveContactMessage(form);
       setForm(initialForm);
-
-      if (result.source === "database") {
-        setSuccess("Message saved successfully. I will check it from the admin dashboard.");
-        return;
-      }
-
-      setFallbackNotice("Database save failed, so this message was saved only on this device as a fallback. It will not appear cross-device until the database connection is fixed.");
-      setSubmitError(result.errorMessage || "Could not save your message to the database.");
+      setSuccess(result.message || "Message saved successfully. I will check it from the admin dashboard.");
     } catch (saveError) {
       setSubmitError(saveError.message || "Could not save your message.");
     } finally {
@@ -181,15 +172,15 @@ function Contact() {
               </div>
 
               <div className="grid gap-5 md:grid-cols-2">
-                {["name", "email"].map((field) => (
+                {["name", "email", "phone"].map((field) => (
                   <label className="form-label" key={field}>
                     <span>{field[0].toUpperCase() + field.slice(1)}</span>
                     <input
                       className="form-input"
-                      type={field === "email" ? "email" : "text"}
+                      type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
                       value={form[field]}
                       onChange={(event) => updateField(field, event.target.value)}
-                      placeholder={`Enter your ${field}`}
+                      placeholder={field === "phone" ? "Optional phone number" : `Enter your ${field}`}
                     />
                     {errors[field] && <small className="form-error">{errors[field]}</small>}
                   </label>
@@ -220,7 +211,6 @@ function Contact() {
               </label>
 
               {submitError && <p className="rounded-2xl bg-rose-500/10 p-4 font-semibold text-rose-700 dark:text-rose-300">{submitError}</p>}
-              {fallbackNotice && <p className="rounded-2xl bg-amber-500/10 p-4 font-semibold text-amber-700 dark:text-amber-300">{fallbackNotice}</p>}
               {success && <p className="rounded-2xl bg-emerald-500/10 p-4 font-semibold text-emerald-700 dark:text-emerald-300">{success}</p>}
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

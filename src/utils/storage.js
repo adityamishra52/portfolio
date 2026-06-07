@@ -1,54 +1,9 @@
-const CONTACT_MESSAGE_KEY = "aditaya_portfolio_contact_messages";
-const HIRE_REQUEST_KEY = "aditaya_portfolio_hire_requests";
-
-const safeParse = (value) => {
-  try {
-    const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-const createId = () =>
-  typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-const getEntries = (storageKey) => {
-  if (typeof window === "undefined") return [];
-  return safeParse(window.localStorage.getItem(storageKey));
-};
-
-const saveEntries = (storageKey, entries) => {
-  if (typeof window === "undefined") return entries;
-  window.localStorage.setItem(storageKey, JSON.stringify(entries));
-  return entries;
-};
-
-const upsertLocalEntry = (storageKey, entry) => {
-  const nextEntries = [entry, ...getEntries(storageKey).filter((current) => current.id !== entry.id)];
-  nextEntries.sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime());
-  return saveEntries(storageKey, nextEntries);
-};
-
-const removeLocalEntry = (storageKey, id) => saveEntries(storageKey, getEntries(storageKey).filter((entry) => entry.id !== id));
-
-const saveFallbackRecord = (storageKey, payload) => {
-  const nextEntry = {
-    id: createId(),
-    read: false,
-    createdAt: new Date().toISOString(),
-    ...payload,
-  };
-
-  upsertLocalEntry(storageKey, nextEntry);
-  return nextEntry;
-};
+const ADMIN_SESSION_KEY = "aditaya_portfolio_admin_session";
 
 const sanitizeContactMessage = (message) => ({
   name: message.name.trim(),
   email: message.email.trim(),
+  phone: message.phone?.trim() || "",
   subject: message.subject.trim(),
   message: message.message.trim(),
 });
@@ -56,7 +11,9 @@ const sanitizeContactMessage = (message) => ({
 const sanitizeHireRequest = (request) => ({
   name: request.name.trim(),
   email: request.email.trim(),
+  phone: request.phone?.trim() || "",
   company: request.company.trim(),
+  subject: request.subject?.trim() || request.projectType.trim(),
   projectType: request.projectType.trim(),
   budget: request.budget.trim(),
   timeline: request.timeline.trim(),
@@ -65,32 +22,25 @@ const sanitizeHireRequest = (request) => ({
 
 const parseResponse = async (response) => {
   const contentType = response.headers.get("content-type") || "";
-  let data = {};
-  let text = "";
 
   if (contentType.includes("application/json")) {
-    try {
-      data = await response.json();
-    } catch {
-      data = {};
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || data.success === false) {
+      const error = new Error(data.message || "A server error occurred. Please try again.");
+      error.status = response.status;
+      throw error;
     }
-  } else {
-    text = await response.text();
+
+    return data;
   }
+
+  const text = await response.text();
 
   if (!response.ok) {
-    const errorMessage =
-      data.message ||
-      data.error ||
-      text ||
-      "A server error occurred. Please try again.";
-    const error = new Error(errorMessage);
+    const error = new Error(text || "A server error occurred. Please try again.");
     error.status = response.status;
     throw error;
-  }
-
-  if (contentType.includes("application/json")) {
-    return data;
   }
 
   return { success: true, message: text || "Request completed." };
@@ -101,143 +51,108 @@ const requestJson = async (url, options = {}) => {
   return parseResponse(response);
 };
 
-const adminHeaders = (adminKey) => ({
-  "Content-Type": "application/json",
-  "x-admin-key": adminKey,
-});
+const buildAdminHeaders = (adminKey, includeJson = true) => {
+  const headers = {
+    "x-admin-key": adminKey,
+  };
 
-const shouldFallbackToLocal = (error) => !error.status || error.status >= 500;
+  if (includeJson) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return headers;
+};
 
 export const saveContactMessage = async (message) => {
   const payload = sanitizeContactMessage(message);
 
-  try {
-    const data = await requestJson("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    upsertLocalEntry(CONTACT_MESSAGE_KEY, data.entry);
-    return { entry: data.entry, source: "database" };
-  } catch (error) {
-    if (!shouldFallbackToLocal(error)) {
-      throw error;
-    }
-
-    const entry = saveFallbackRecord(CONTACT_MESSAGE_KEY, payload);
-    return {
-      entry,
-      source: "fallback",
-      errorMessage: error.message || "Could not save to the database.",
-    };
-  }
+  return requestJson("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 };
 
 export const saveHireRequest = async (request) => {
   const payload = sanitizeHireRequest(request);
 
-  try {
-    const data = await requestJson("/api/hire", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+  return requestJson("/api/hire", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+};
 
-    upsertLocalEntry(HIRE_REQUEST_KEY, data.entry);
-    return { entry: data.entry, source: "database" };
-  } catch (error) {
-    if (!shouldFallbackToLocal(error)) {
-      throw error;
+export const getAdminOverview = async (adminKey) =>
+  requestJson("/api/admin/messages?view=overview", {
+    headers: buildAdminHeaders(adminKey, false),
+  });
+
+export const getAdminMessages = async (adminKey, params) => {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, value);
     }
+  });
 
-    const entry = saveFallbackRecord(HIRE_REQUEST_KEY, payload);
-    return {
-      entry,
-      source: "fallback",
-      errorMessage: error.message || "Could not save to the database.",
-    };
-  }
+  return requestJson(`/api/admin/messages?${searchParams.toString()}`, {
+    headers: buildAdminHeaders(adminKey, false),
+  });
 };
 
-export const getContactMessages = async (adminKey) => {
-  try {
-    const data = await requestJson("/api/admin/messages?type=contact", {
-      headers: adminHeaders(adminKey),
-    });
-
-    saveEntries(CONTACT_MESSAGE_KEY, data.entries);
-    return { entries: data.entries, source: "database" };
-  } catch (error) {
-    if (!shouldFallbackToLocal(error)) throw error;
-    return {
-      entries: getEntries(CONTACT_MESSAGE_KEY),
-      source: "fallback",
-      errorMessage: error.message || "Could not load contact messages from the database.",
-    };
-  }
-};
-
-export const getHireRequests = async (adminKey) => {
-  try {
-    const data = await requestJson("/api/admin/messages?type=hire", {
-      headers: adminHeaders(adminKey),
-    });
-
-    saveEntries(HIRE_REQUEST_KEY, data.entries);
-    return { entries: data.entries, source: "database" };
-  } catch (error) {
-    if (!shouldFallbackToLocal(error)) throw error;
-    return {
-      entries: getEntries(HIRE_REQUEST_KEY),
-      source: "fallback",
-      errorMessage: error.message || "Could not load hire requests from the database.",
-    };
-  }
-};
-
-export const setContactMessageRead = async (id, read, adminKey) => {
-  const data = await requestJson("/api/admin/messages", {
+export const updateAdminMessage = async (adminKey, id, payload) =>
+  requestJson(`/api/admin/messages/${encodeURIComponent(id)}${payload.type ? `?type=${encodeURIComponent(payload.type)}` : ""}`, {
     method: "PATCH",
-    headers: adminHeaders(adminKey),
-    body: JSON.stringify({ type: "contact", id, read }),
+    headers: buildAdminHeaders(adminKey),
+    body: JSON.stringify(payload),
   });
 
-  upsertLocalEntry(CONTACT_MESSAGE_KEY, data.entry);
-  return data.entry;
-};
-
-export const setHireRequestRead = async (id, read, adminKey) => {
-  const data = await requestJson("/api/admin/messages", {
-    method: "PATCH",
-    headers: adminHeaders(adminKey),
-    body: JSON.stringify({ type: "hire", id, read }),
-  });
-
-  upsertLocalEntry(HIRE_REQUEST_KEY, data.entry);
-  return data.entry;
-};
-
-export const deleteContactMessage = async (id, adminKey) => {
-  await requestJson(`/api/admin/messages?type=contact&id=${encodeURIComponent(id)}`, {
+export const deleteAdminMessage = async (adminKey, id, type) =>
+  requestJson(`/api/admin/messages/${encodeURIComponent(id)}?type=${encodeURIComponent(type)}`, {
     method: "DELETE",
-    headers: { "x-admin-key": adminKey },
+    headers: buildAdminHeaders(adminKey, false),
   });
 
-  return removeLocalEntry(CONTACT_MESSAGE_KEY, id);
-};
+export const exportAdminMessages = async (adminKey, params) => {
+  const searchParams = new URLSearchParams();
 
-export const deleteHireRequest = async (id, adminKey) => {
-  await requestJson(`/api/admin/messages?type=hire&id=${encodeURIComponent(id)}`, {
-    method: "DELETE",
-    headers: { "x-admin-key": adminKey },
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, value);
+    }
   });
 
-  return removeLocalEntry(HIRE_REQUEST_KEY, id);
+  const response = await fetch(`/api/admin/export?${searchParams.toString()}`, {
+    headers: buildAdminHeaders(adminKey, false),
+  });
+
+  const contentType = response.headers.get("content-type") || "";
+  if (!response.ok || contentType.includes("application/json")) {
+    await parseResponse(response);
+  }
+
+  return response.blob();
 };
 
-export const getSubmissionStats = (entries) => ({
-  total: entries.length,
-  unread: entries.filter((entry) => !entry.read).length,
-  recent: entries.slice(0, 5),
-});
+export const saveAdminSession = (session) => {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
+};
+
+export const getAdminSession = () => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(ADMIN_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const clearAdminSession = () => {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(ADMIN_SESSION_KEY);
+};

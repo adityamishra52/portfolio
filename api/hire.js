@@ -1,11 +1,6 @@
 const { createMessage } = require("./_lib/messages");
 const { sanitizeErrorMessage, sendJson } = require("./_lib/response");
-
-const parseBody = (body) => {
-  if (!body) return {};
-  if (typeof body === "string") return JSON.parse(body);
-  return body;
-};
+const { getIpAddress, parseBody } = require("./_lib/request");
 
 const validateHirePayload = (payload) => {
   if (!payload.name?.trim()) return "Name is required.";
@@ -34,11 +29,15 @@ module.exports = async (req, res) => {
     const entry = await createMessage("hire", {
       name: body.name.trim(),
       email: body.email.trim(),
+      phone: body.phone?.trim() || "",
       company: body.company.trim(),
+      subject: body.subject?.trim() || body.projectType.trim(),
       projectType: body.projectType.trim(),
       budget: body.budget.trim(),
       timeline: body.timeline.trim(),
       message: body.message.trim(),
+      userAgent: req.headers["user-agent"] || "",
+      ipAddress: getIpAddress(req),
     });
 
     return sendJson(res, 200, { success: true, message: "Message saved", entry });
