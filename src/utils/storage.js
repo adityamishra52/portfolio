@@ -92,7 +92,7 @@ export const saveContactMessage = async (message) => {
   const payload = sanitizeContactMessage(message);
 
   try {
-    const data = await requestJson("/api/contact-messages", {
+    const data = await requestJson("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -118,7 +118,7 @@ export const saveHireRequest = async (request) => {
   const payload = sanitizeHireRequest(request);
 
   try {
-    const data = await requestJson("/api/hire-requests", {
+    const data = await requestJson("/api/hire", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
