@@ -1,9 +1,5 @@
 const { createMessage } = require("./_lib/messages");
-
-const sendJson = (res, statusCode, payload) => {
-  res.status(statusCode).setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(payload));
-};
+const { sanitizeErrorMessage, sendJson } = require("./_lib/response");
 
 const parseBody = (body) => {
   if (!body) return {};
@@ -23,16 +19,16 @@ const validateHirePayload = (payload) => {
 };
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-    return sendJson(res, 405, { error: "Method not allowed." });
-  }
-
   try {
+    if (req.method !== "POST") {
+      return sendJson(res, 405, { success: false, message: "Method not allowed." });
+    }
+
     const body = parseBody(req.body);
     const errorMessage = validateHirePayload(body);
 
     if (errorMessage) {
-      return sendJson(res, 400, { error: errorMessage });
+      return sendJson(res, 400, { success: false, message: errorMessage });
     }
 
     const entry = await createMessage("hire", {
@@ -45,10 +41,12 @@ module.exports = async (req, res) => {
       message: body.message.trim(),
     });
 
-    return sendJson(res, 201, { entry });
+    return sendJson(res, 200, { success: true, message: "Message saved", entry });
   } catch (error) {
+    console.error("[api/hire] Request failed:", error.message);
     return sendJson(res, error.statusCode || 500, {
-      error: error.message || "Could not save hire request.",
+      success: false,
+      message: sanitizeErrorMessage(error, "Could not save hire request."),
     });
   }
 };

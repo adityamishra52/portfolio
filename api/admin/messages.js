@@ -1,9 +1,5 @@
 const { deleteMessage, listMessages, updateMessageRead } = require("../_lib/messages");
-
-const sendJson = (res, statusCode, payload) => {
-  res.status(statusCode).setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(payload));
-};
+const { sanitizeErrorMessage, sendJson } = require("../_lib/response");
 
 const parseBody = (body) => {
   if (!body) return {};
@@ -34,25 +30,27 @@ module.exports = async (req, res) => {
     if (req.method === "GET") {
       const type = req.query.type;
       const entries = await listMessages(type);
-      return sendJson(res, 200, { entries });
+      return sendJson(res, 200, { success: true, message: "Messages loaded", entries });
     }
 
     if (req.method === "PATCH") {
       const body = parseBody(req.body);
       const entry = await updateMessageRead(body.type, body.id, body.read);
-      return sendJson(res, 200, { entry });
+      return sendJson(res, 200, { success: true, message: "Message updated", entry });
     }
 
     if (req.method === "DELETE") {
       const { type, id } = req.query;
       await deleteMessage(type, id);
-      return sendJson(res, 200, { ok: true });
+      return sendJson(res, 200, { success: true, message: "Message deleted" });
     }
 
-    return sendJson(res, 405, { error: "Method not allowed." });
+    return sendJson(res, 405, { success: false, message: "Method not allowed." });
   } catch (error) {
+    console.error("[api/admin/messages] Request failed:", error.message);
     return sendJson(res, error.statusCode || 500, {
-      error: error.message || "Could not complete admin action.",
+      success: false,
+      message: sanitizeErrorMessage(error, "Could not complete admin action."),
     });
   }
 };

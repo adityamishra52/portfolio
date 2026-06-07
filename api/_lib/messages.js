@@ -45,8 +45,14 @@ const createMessage = async (type, payload) => {
     createdAt: new Date(),
   };
 
-  const result = await db.collection(collectionName).insertOne(document);
-  return formatMessage({ ...document, _id: result.insertedId });
+  try {
+    const result = await db.collection(collectionName).insertOne(document);
+    console.info("[mongodb] Insert success for %s", collectionName);
+    return formatMessage({ ...document, _id: result.insertedId });
+  } catch (error) {
+    console.error("[mongodb] Insert failed for %s: %s", collectionName, error.message);
+    throw error;
+  }
 };
 
 const updateMessageRead = async (type, id, read) => {

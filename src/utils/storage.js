@@ -64,16 +64,36 @@ const sanitizeHireRequest = (request) => ({
 });
 
 const parseResponse = async (response) => {
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : {};
+  const contentType = response.headers.get("content-type") || "";
+  let data = {};
+  let text = "";
+
+  if (contentType.includes("application/json")) {
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+  } else {
+    text = await response.text();
+  }
 
   if (!response.ok) {
-    const error = new Error(data.error || data.message || `Request failed with status ${response.status}.`);
+    const errorMessage =
+      data.message ||
+      data.error ||
+      text ||
+      "A server error occurred. Please try again.";
+    const error = new Error(errorMessage);
     error.status = response.status;
     throw error;
   }
 
-  return data;
+  if (contentType.includes("application/json")) {
+    return data;
+  }
+
+  return { success: true, message: text || "Request completed." };
 };
 
 const requestJson = async (url, options = {}) => {
