@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ProjectImage from "./ProjectImage";
 import { FiArrowUpRight, FiLayers } from "react-icons/fi";
+import { trackEvent } from "../utils/analytics";
 
 function ProjectCard({ project, featured = false }) {
   const hasExternalDemo = Boolean(project.live || project.github);
@@ -57,7 +58,7 @@ function ProjectCard({ project, featured = false }) {
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <Link className="btn-primary w-full" to={`/projects/${project.slug}`}>
+          <Link className="btn-primary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "details" })}>
             Details <FiArrowUpRight />
           </Link>
           {hasExternalDemo ? (
@@ -66,6 +67,7 @@ function ProjectCard({ project, featured = false }) {
               href={project.live || project.github}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "live-demo" })}
             >
               Live Demo <FiArrowUpRight />
             </a>
@@ -74,7 +76,7 @@ function ProjectCard({ project, featured = false }) {
               Coming Soon
             </button>
           )}
-          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`}>
+          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`} onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "tech-stack" })}>
             Tech Stack <FiLayers />
           </Link>
         </div>

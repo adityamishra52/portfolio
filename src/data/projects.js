@@ -6,7 +6,9 @@ export const projects = [
     type: "Featured",
     live: "https://boostpilotai.vercel.app/",
     description:
-      "AI-powered content optimization platform for creators. It analyzes images/videos and generates captions, hooks, hashtags, content suggestions, platform optimization, thumbnail ideas, and reports.",
+      "AI-powered content optimization platform for creators. It analyzes images and videos, then generates captions, hooks, hashtags, platform suggestions, thumbnail ideas, and export-ready insight reports.",
+    summary:
+      "A premium creator workflow that turns raw media into platform-ready content decisions without forcing users through a complex analyst dashboard.",
     tech: [
       "React",
       "Vite",
@@ -28,6 +30,28 @@ export const projects = [
       "Workflow designed for multi-platform publishing and content planning.",
       "Dashboard-oriented experience for faster review, iteration, and export.",
     ],
+    features: [
+      "Upload and analyze image or video content.",
+      "Generate captions, hooks, hashtags, and thumbnail ideas in one pass.",
+      "Surface AI recommendations in a dashboard-friendly review layout.",
+      "Store media securely and support authenticated creator sessions.",
+    ],
+    challenges: [
+      "Balancing rich AI output with a UI that still feels lightweight.",
+      "Keeping media-heavy workflows responsive and understandable.",
+      "Designing recommendations so creators can act quickly instead of reading long reports.",
+    ],
+    solutions: [
+      "Organized outputs into focused panels for content, platform fit, and export decisions.",
+      "Used structured backend routes and persistent storage for uploaded media workflows.",
+      "Designed a cleaner review surface that prioritizes actionability over raw AI verbosity.",
+    ],
+    results: [
+      "Faster content planning workflow for short-form creators.",
+      "More premium product positioning for an AI media tool.",
+      "A clearer case study for recruiter and client conversations around AI product UX.",
+    ],
+    related: ["optiresume", "stock-market-prediction-ml"],
     gradient: "from-teal-400 via-cyan-500 to-rose-500",
     preview: "/projects/boostpilot-ai-dashboard.png",
     previewAlt: "BoostPilot AI content analysis dashboard",
@@ -47,6 +71,8 @@ export const projects = [
     live: "https://support-kindness.vercel.app/",
     description:
       "Community kindness platform for animal feeding, poor people help, tree plantation, food distribution, transparency reports, gallery, contact, and admin dashboard.",
+    summary:
+      "A trust-first nonprofit style platform designed to make community work visible, navigable, and emotionally credible for donors and supporters.",
     tech: [
       "React",
       "Vite",
@@ -66,6 +92,28 @@ export const projects = [
       "Community-first storytelling built around support initiatives and outreach.",
       "Structured content flow for campaigns, updates, and public engagement.",
     ],
+    features: [
+      "Public pages for initiatives, updates, and donation-related trust building.",
+      "Gallery and reporting workflow to show visible community impact.",
+      "Admin interface for content updates and media management.",
+      "Mobile-first layout for broader accessibility among community audiences.",
+    ],
+    challenges: [
+      "Creating credibility without a cold institutional feel.",
+      "Keeping image-heavy pages fast and understandable.",
+      "Connecting public storytelling with admin publishing workflows.",
+    ],
+    solutions: [
+      "Used a cleaner section hierarchy that makes initiatives and transparency content easier to scan.",
+      "Balanced community warmth with structured content blocks and clear CTAs.",
+      "Connected backend-managed content flows to a public-facing experience designed for trust.",
+    ],
+    results: [
+      "A more credible and polished presentation for social-impact work.",
+      "Better public readability for outreach, updates, and support messaging.",
+      "A strong example of admin-backed content management in a mission-driven project.",
+    ],
+    related: ["charityvibe", "boostpilot-ai"],
     gradient: "from-emerald-400 via-lime-500 to-amber-500",
     preview: "/projects/support-kindness-homepage.png",
     previewAlt: "Care Contribution community support homepage",
@@ -84,15 +132,39 @@ export const projects = [
     type: "Donation",
     live: "https://charityvibe-frontend.vercel.app/",
     description:
-      "Donation and charity support platform with donation flow, volunteer/support pages, responsive UI, volunteer features, and community-focused design.",
+      "Donation and charity support platform with donation flow, volunteer and support pages, responsive UI, and community-focused design.",
+    summary:
+      "A conversion-aware donation experience focused on trust, clarity, and action across donor, supporter, and volunteer journeys.",
     tech: ["React", "Node.js", "Express", "MongoDB", "Donation Flow", "Email/OTP", "Vercel", "Render"],
     highlights: [
-      "Donation/support workflow with community-first pages.",
+      "Donation and support workflow with community-first pages.",
       "Volunteer and support content structure.",
       "Responsive interface designed for trust and conversion.",
       "Clear CTA hierarchy for donation, volunteer, and awareness journeys.",
       "Brand presentation tailored for credibility and community participation.",
     ],
+    features: [
+      "Donation-focused landing and support flow.",
+      "Volunteer and contribution pathways with clear CTA structure.",
+      "Trust-oriented visual treatment for cause-based communication.",
+      "Responsive layout for repeated public engagement touchpoints.",
+    ],
+    challenges: [
+      "Reducing hesitation around donation pages.",
+      "Keeping support and volunteer content cohesive instead of fragmented.",
+      "Building emotional resonance without making the interface feel noisy.",
+    ],
+    solutions: [
+      "Created clearer CTA hierarchy for donate, support, and volunteer actions.",
+      "Used calmer sectioning and stronger trust signals throughout the page.",
+      "Structured the frontend around action-oriented content rather than generic charity visuals.",
+    ],
+    results: [
+      "A stronger public-facing donation case study.",
+      "More polished nonprofit product presentation.",
+      "Clearer storytelling around conversion-focused community design.",
+    ],
+    related: ["support-kindness", "optiresume"],
     gradient: "from-rose-500 via-fuchsia-500 to-violet-600",
     preview: "/projects/charityvibe-donation-page.png",
     previewAlt: "CharityVibe donation platform page",
@@ -111,7 +183,9 @@ export const projects = [
     type: "Builder",
     live: "",
     description:
-      "AI-powered resume builder with templates, PDF/DOCX export, live preview, uploaded resume extraction, profile photo support, and premium template system.",
+      "AI-powered resume builder with templates, PDF and DOCX export, live preview, uploaded resume extraction, profile photo support, and premium template system.",
+    summary:
+      "A career-product concept focused on helping candidates move from rough information to polished recruiter-ready resumes through guided editing and AI assistance.",
     tech: ["React", "Vite", "Tailwind CSS", "Node.js", "Express", "MongoDB", "PDF/DOCX generation", "Admin Panel"],
     highlights: [
       "Live resume preview and premium template system.",
@@ -120,8 +194,31 @@ export const projects = [
       "Builder flow organized around fast editing, previewing, and template switching.",
       "Product direction focused on polished output for recruiters and hiring teams.",
     ],
+    features: [
+      "Structured builder flow for profile details, experience, and templates.",
+      "Live preview surface designed around rapid editing confidence.",
+      "Resume extraction and export-oriented product direction.",
+      "Premium visual direction for job-seeker facing presentation.",
+    ],
+    challenges: [
+      "Combining flexibility with a simple editing flow.",
+      "Keeping template switching intuitive as document complexity grows.",
+      "Designing a product that feels premium before export logic is fully mature.",
+    ],
+    solutions: [
+      "Built a builder-first experience with predictable editing steps.",
+      "Focused on live preview feedback to reduce uncertainty during resume editing.",
+      "Positioned the product around recruiter-readiness rather than just document generation.",
+    ],
+    results: [
+      "A strong product concept for AI-assisted career tooling.",
+      "Clear recruiter and client story around UX for structured data entry.",
+      "Useful portfolio evidence for form-heavy product thinking.",
+    ],
+    related: ["boostpilot-ai", "stock-market-prediction-ml"],
     gradient: "from-sky-400 via-blue-500 to-indigo-600",
     preview: "https://images.unsplash.com/photo-1586280042712-cd581eaf89f7?w=800&h=600&fit=crop",
+    previewAlt: "OptiResume application concept preview",
     visual: "resume",
     gallery: [
       "https://images.unsplash.com/photo-1586280042712-cd581eaf89f7?w=500&h=400&fit=crop",
@@ -140,6 +237,8 @@ export const projects = [
     live: "https://github.com/adityamishra52/Stock-Market-Prediction-ML",
     description:
       "Machine learning-based stock market prediction project that analyzes historical market data and generates predictive insights using data science and forecasting techniques.",
+    summary:
+      "A data science project centered on historical trend analysis, feature engineering, and predictive experimentation for market movement exploration.",
     tech: ["Python", "Machine Learning", "Pandas", "NumPy", "Scikit-learn", "Data Analysis", "Predictive Modeling"],
     highlights: [
       "Historical market data analysis and preprocessing.",
@@ -148,8 +247,31 @@ export const projects = [
       "Feature engineering and evaluation workflow for market trend exploration.",
       "Repository-style implementation suited for research, experimentation, and iteration.",
     ],
+    features: [
+      "Historical data preparation and feature engineering pipeline.",
+      "Model experimentation for predictive insight generation.",
+      "Notebook or repository-style workflow geared toward iteration.",
+      "Clear emphasis on analytical thinking and evaluation flow.",
+    ],
+    challenges: [
+      "Managing uncertainty in predictive interpretation.",
+      "Keeping the workflow explainable enough for non-ML reviewers.",
+      "Presenting a research-style build inside a portfolio context.",
+    ],
+    solutions: [
+      "Focused the project story on workflow, experimentation, and evaluation instead of overclaiming accuracy.",
+      "Used common Python data tooling to keep the pipeline legible and reproducible.",
+      "Framed the repository as an applied ML exploration with portfolio-friendly clarity.",
+    ],
+    results: [
+      "Demonstrates applied ML capability beyond CRUD application work.",
+      "Shows comfort with data preprocessing, analysis, and modeling workflows.",
+      "Adds range to the portfolio for technical reviewers and AI-focused roles.",
+    ],
+    related: ["boostpilot-ai", "optiresume"],
     gradient: "from-amber-400 via-orange-500 to-teal-600",
     preview: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+    previewAlt: "Stock market prediction project visual",
     visual: "ml",
     gallery: [
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=400&fit=crop",

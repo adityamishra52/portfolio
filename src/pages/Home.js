@@ -6,6 +6,7 @@ import ProjectCard from "../components/ProjectCard";
 import { profile, skills } from "../data/portfolio";
 import { projects } from "../data/projects";
 import useImagePreload from "../utils/useImagePreload";
+import { trackEvent } from "../utils/analytics";
 
 function Home() {
   useImagePreload(projects.slice(0, 3).map((project) => project.preview).filter(Boolean));
@@ -37,7 +38,7 @@ function Home() {
                   <Link className="btn-secondary" to="/contact">
                     Contact Me <FiMail />
                   </Link>
-                  <a className="btn-secondary" href={profile.resume} target="_blank" rel="noreferrer">
+                  <a className="btn-secondary" href={profile.resume} target="_blank" rel="noreferrer" onClick={() => trackEvent("resume_download", { location: "home-hero" })}>
                     Resume <FiDownload />
                   </a>
                 </div>

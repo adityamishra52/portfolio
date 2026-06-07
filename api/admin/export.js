@@ -1,4 +1,5 @@
 const { exportMessages } = require("../_lib/messages");
+const { enforceRateLimit } = require("../_lib/rateLimit");
 const { sanitizeErrorMessage } = require("../_lib/response");
 const { assertAdminAccess } = require("../_lib/auth");
 const { toCsv } = require("../_lib/csv");
@@ -23,6 +24,10 @@ const columns = [
 
 module.exports = async (req, res) => {
   try {
+    if (enforceRateLimit(req, res, { keyPrefix: "admin-export", max: 20, windowMs: 60 * 1000 })) {
+      return;
+    }
+
     assertAdminAccess(req);
 
     if (req.method !== "GET") {

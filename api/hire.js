@@ -1,4 +1,6 @@
 const { createMessage } = require("./_lib/messages");
+const { sendPortfolioNotification } = require("./_lib/email");
+const { enforceRateLimit } = require("./_lib/rateLimit");
 const { sanitizeErrorMessage, sendJson } = require("./_lib/response");
 const { getIpAddress, parseBody } = require("./_lib/request");
 
@@ -15,6 +17,10 @@ const validateHirePayload = (payload) => {
 
 module.exports = async (req, res) => {
   try {
+    if (enforceRateLimit(req, res, { keyPrefix: "hire-form", max: 6, windowMs: 60 * 1000 })) {
+      return;
+    }
+
     if (req.method !== "POST") {
       return sendJson(res, 405, { success: false, message: "Method not allowed." });
     }
@@ -39,6 +45,12 @@ module.exports = async (req, res) => {
       userAgent: req.headers["user-agent"] || "",
       ipAddress: getIpAddress(req),
     });
+
+    try {
+      await sendPortfolioNotification(entry);
+    } catch (emailError) {
+      console.error("[api/hire] Email notification failed:", emailError.message);
+    }
 
     return sendJson(res, 200, { success: true, message: "Message saved", entry });
   } catch (error) {

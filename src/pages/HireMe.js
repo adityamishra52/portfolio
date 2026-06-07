@@ -5,6 +5,7 @@ import { FiActivity, FiArrowRight, FiBarChart2, FiBriefcase, FiLayout, FiSearch,
 import SEO from "../components/SEO";
 import { profile } from "../data/portfolio";
 import { saveHireRequest } from "../utils/storage";
+import { trackEvent } from "../utils/analytics";
 
 const initialForm = {
   name: "",
@@ -95,6 +96,11 @@ function HireMe() {
 
     try {
       const result = await saveHireRequest(form);
+      trackEvent("hire_me_submit", {
+        source: "hire-me",
+        project_type: form.projectType,
+        budget: form.budget,
+      });
       setForm(initialForm);
       setSuccess(result.message || "Hire request saved successfully. I will review it from the admin dashboard.");
     } catch (saveError) {

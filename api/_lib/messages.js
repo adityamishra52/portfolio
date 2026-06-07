@@ -264,9 +264,15 @@ const getOverviewStats = async () => {
     totalHireRequests: hireCount,
     totalMessages: contactCount + hireCount,
     newMessages: statusCounts.new,
+    readMessages: statusCounts.read,
     repliedMessages: statusCounts.replied,
     archivedMessages: statusCounts.archived,
     latestMessageDate: latestDate ? new Date(latestDate).toISOString() : "",
+    sourceBreakdown: {
+      contact: contactCount,
+      "hire-me": hireCount,
+    },
+    statusBreakdown: statusCounts,
   };
 };
 

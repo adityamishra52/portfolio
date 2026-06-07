@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
+  FiActivity,
   FiArchive,
   FiBarChart2,
   FiCheckCircle,
@@ -38,6 +39,7 @@ const sidebarTabs = [
   { key: "contact", label: "Contact Messages", icon: FiMail },
   { key: "hire", label: "Hire Me Requests", icon: FiUsers },
   { key: "archived", label: "Archived", icon: FiArchive },
+  { key: "analytics", label: "Analytics", icon: FiActivity },
   { key: "settings", label: "Settings", icon: FiSettings },
 ];
 
@@ -177,7 +179,7 @@ function Admin() {
   };
 
   const loadMessages = async (adminKey) => {
-    if (activeTab === "overview" || activeTab === "settings") return;
+    if (activeTab === "overview" || activeTab === "analytics" || activeTab === "settings") return;
 
     setIsLoading(true);
     setDashboardError("");
@@ -201,7 +203,7 @@ function Admin() {
       return;
     }
 
-    if (activeTab === "settings") return;
+    if (activeTab === "analytics" || activeTab === "settings") return;
 
     loadMessages(key.trim());
   }, [authenticated, key, activeTab, currentQuery]);
@@ -316,6 +318,30 @@ function Admin() {
         { label: "Latest Message Date", value: overview.latestMessageDate ? new Date(overview.latestMessageDate).toLocaleString() : "No messages", icon: FiClock },
       ]
     : [];
+  const analyticsCards = overview
+    ? [
+        {
+          label: "Contact Share",
+          value: `${Math.round(((overview.sourceBreakdown?.contact || 0) / Math.max(overview.totalMessages || 1, 1)) * 100)}%`,
+          helper: `${overview.sourceBreakdown?.contact || 0} contact messages`,
+        },
+        {
+          label: "Hire Share",
+          value: `${Math.round(((overview.sourceBreakdown?.["hire-me"] || 0) / Math.max(overview.totalMessages || 1, 1)) * 100)}%`,
+          helper: `${overview.sourceBreakdown?.["hire-me"] || 0} hire requests`,
+        },
+        {
+          label: "Reply Rate",
+          value: `${Math.round(((overview.repliedMessages || 0) / Math.max(overview.totalMessages || 1, 1)) * 100)}%`,
+          helper: `${overview.repliedMessages || 0} replied messages`,
+        },
+        {
+          label: "Read Rate",
+          value: `${Math.round((((overview.readMessages || 0) + (overview.repliedMessages || 0)) / Math.max(overview.totalMessages || 1, 1)) * 100)}%`,
+          helper: `${(overview.readMessages || 0) + (overview.repliedMessages || 0)} opened messages`,
+        },
+      ]
+    : [];
 
   return (
     <>
@@ -347,7 +373,8 @@ function Admin() {
                 <h1 className="mt-2 text-2xl font-black text-slate-950 dark:text-white">Message Center</h1>
               </div>
 
-              <div className="grid gap-2">
+              <div className="-mx-1 overflow-x-auto pb-1 xl:mx-0 xl:overflow-visible xl:pb-0">
+                <div className="flex min-w-max gap-2 xl:grid xl:min-w-0">
                 {sidebarTabs.map((tab) => {
                   const Icon = tab.icon;
                   const active = activeTab === tab.key;
@@ -356,7 +383,7 @@ function Admin() {
                       key={tab.key}
                       type="button"
                       onClick={() => handleTabChange(tab.key)}
-                      className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${
+                      className={`flex min-h-12 items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition xl:w-full ${
                         active
                           ? "bg-slate-950 text-white dark:bg-white dark:text-slate-950"
                           : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
@@ -367,13 +394,14 @@ function Admin() {
                     </button>
                   );
                 })}
+                </div>
               </div>
 
-              <div className="mt-6 flex gap-2">
-                <button className="btn-secondary flex-1" type="button" onClick={refreshCurrentView}>
+              <div className="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                <button className="btn-secondary w-full" type="button" onClick={refreshCurrentView}>
                   Refresh <FiRefreshCw />
                 </button>
-                <button className="btn-secondary flex-1" type="button" onClick={handleLogout}>
+                <button className="btn-secondary w-full" type="button" onClick={handleLogout}>
                   Logout <FiX />
                 </button>
               </div>
@@ -457,29 +485,99 @@ function Admin() {
                 </div>
               )}
 
+              {activeTab === "analytics" && (
+                <div className="space-y-6">
+                  <div className="section-heading">
+                    <span className="eyebrow">Analytics</span>
+                    <h2 className="page-title">Inbox health and response performance</h2>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {isOverviewLoading
+                      ? Array.from({ length: 4 }).map((_, index) => (
+                          <div className="glass-card animate-pulse p-5" key={index}>
+                            <div className="h-4 w-24 rounded bg-slate-200 dark:bg-slate-700" />
+                            <div className="mt-4 h-10 w-16 rounded bg-slate-200 dark:bg-slate-700" />
+                          </div>
+                        ))
+                      : analyticsCards.map((card) => (
+                          <div className="glass-card p-5" key={card.label}>
+                            <p className="text-sm font-black text-slate-500 dark:text-slate-400">{card.label}</p>
+                            <strong className="mt-3 block text-3xl text-slate-950 dark:text-white">{card.value}</strong>
+                            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{card.helper}</p>
+                          </div>
+                        ))}
+                  </div>
+
+                  {overview && (
+                    <div className="grid gap-6 xl:grid-cols-2">
+                      <div className="glass-panel p-6">
+                        <span className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">Source Breakdown</span>
+                        <div className="mt-5 grid gap-4">
+                          {[
+                            { label: "Contact", value: overview.sourceBreakdown?.contact || 0, tone: "bg-violet-500" },
+                            { label: "Hire Me", value: overview.sourceBreakdown?.["hire-me"] || 0, tone: "bg-teal-500" },
+                          ].map((item) => (
+                            <div key={item.label}>
+                              <div className="mb-2 flex items-center justify-between gap-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                <span>{item.label}</span>
+                                <span>{item.value}</span>
+                              </div>
+                              <div className="h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+                                <div className={`h-full rounded-full ${item.tone}`} style={{ width: `${(item.value / Math.max(overview.totalMessages || 1, 1)) * 100}%` }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="glass-panel p-6">
+                        <span className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">Status Breakdown</span>
+                        <div className="mt-5 grid gap-4">
+                          {statusOptions.map((status) => {
+                            const value = overview.statusBreakdown?.[status] || 0;
+                            return (
+                              <div key={status}>
+                                <div className="mb-2 flex items-center justify-between gap-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                  <span>{getStatusLabel(status)}</span>
+                                  <span>{value}</span>
+                                </div>
+                                <div className="h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+                                  <div className="h-full rounded-full bg-slate-950 dark:bg-white" style={{ width: `${(value / Math.max(overview.totalMessages || 1, 1)) * 100}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {(activeTab === "contact" || activeTab === "hire" || activeTab === "archived") && (
                 <div className="space-y-6">
-                  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                  <div className="flex flex-col gap-4 2xl:flex-row 2xl:items-end 2xl:justify-between">
                     <div className="section-heading">
                       <span className="eyebrow">{activeTab === "contact" ? "Contact Messages" : activeTab === "hire" ? "Hire Me Requests" : "Archived"}</span>
                       <h2 className="page-title">Search, triage, and follow up</h2>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
-                      <button className="btn-secondary" type="button" disabled={isExporting} onClick={() => handleExport("contact")}>
+                    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                      <button className="btn-secondary w-full" type="button" disabled={isExporting} onClick={() => handleExport("contact")}>
                         Export Contact <FiDownload />
                       </button>
-                      <button className="btn-secondary" type="button" disabled={isExporting} onClick={() => handleExport("hire")}>
+                      <button className="btn-secondary w-full" type="button" disabled={isExporting} onClick={() => handleExport("hire")}>
                         Export Hire <FiDownload />
                       </button>
-                      <button className="btn-primary" type="button" disabled={isExporting} onClick={() => handleExport("all")}>
+                      <button className="btn-primary w-full" type="button" disabled={isExporting} onClick={() => handleExport("all")}>
                         Export All <FiDownload />
                       </button>
                     </div>
                   </div>
 
-                  <div className="glass-panel grid gap-4 p-5 xl:grid-cols-6">
-                    <label className="form-label xl:col-span-2">
+                  <div className="glass-panel grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-6">
+                    <label className="form-label md:col-span-2 xl:col-span-2">
                       <span>Search</span>
                       <input className="form-input" value={filters.search} onChange={(event) => handleFilterChange("search", event.target.value)} placeholder="Name, email, subject, message" />
                     </label>
@@ -508,7 +606,7 @@ function Admin() {
                         ))}
                       </select>
                     </label>
-                    <div className="flex items-end">
+                    <div className="flex items-end md:col-span-2 xl:col-span-1">
                       <button className="btn-secondary w-full" type="button" onClick={() => setFilters({ ...initialFilters, source: activeTab === "contact" ? "contact" : activeTab === "hire" ? "hire-me" : "" })}>
                         Reset <FiFilter />
                       </button>
@@ -524,7 +622,45 @@ function Admin() {
                   </div>
 
                   <div className="glass-panel overflow-hidden p-0">
-                    <div className="overflow-x-auto">
+                    <div className="grid gap-4 p-4 md:hidden">
+                      {isLoading ? (
+                        Array.from({ length: 5 }).map((_, index) => (
+                          <div className="h-40 animate-pulse rounded-3xl bg-slate-100 dark:bg-white/5" key={index} />
+                        ))
+                      ) : messages.length === 0 ? (
+                        <div className="rounded-2xl border border-dashed border-slate-200/80 p-6 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                          No messages match the current filters.
+                        </div>
+                      ) : (
+                        messages.map((message) => (
+                          <article className="rounded-3xl border border-slate-200/70 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5" key={message.id}>
+                            <div className="flex flex-wrap items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="font-black text-slate-950 dark:text-white">{message.name}</p>
+                                <p className="mt-1 break-all text-sm text-slate-500 dark:text-slate-400">{message.email}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <span className={`rounded-full px-3 py-1 text-xs font-black ${sourceTone[message.source]}`}>{message.source}</span>
+                                <span className={`rounded-full px-3 py-1 text-xs font-black ${statusTone[message.status]}`}>{getStatusLabel(message.status)}</span>
+                              </div>
+                            </div>
+                            <p className="mt-4 text-sm font-semibold text-slate-800 dark:text-slate-200">{message.subject || message.projectType || "Message"}</p>
+                            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{message.message.slice(0, 140)}{message.message.length > 140 ? "..." : ""}</p>
+                            <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">{new Date(message.createdAt).toLocaleString()}</p>
+                            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                              <button className="btn-secondary w-full" type="button" onClick={() => setDrawerMessage(message)}>
+                                View <FiEye />
+                              </button>
+                              <button className="btn-secondary w-full" type="button" disabled={actionId === message.id} onClick={() => handleStatusUpdate(message, message.status === "new" ? "read" : "new")}>
+                                {message.status === "new" ? "Mark Read" : "Mark Unread"}
+                              </button>
+                            </div>
+                          </article>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="hidden overflow-x-auto md:block">
                       <table className="min-w-full divide-y divide-slate-200/70 dark:divide-white/10">
                         <thead className="bg-slate-50/80 dark:bg-white/5">
                           <tr className="text-left text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -590,13 +726,13 @@ function Admin() {
 
                     <div className="flex flex-col gap-3 border-t border-slate-200/70 px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/10">
                       <p className="text-sm text-slate-500 dark:text-slate-400">
-                        Page {pagination.page} of {pagination.totalPages} · {pagination.total} total messages
+                        Page {pagination.page} of {pagination.totalPages} - {pagination.total} total messages
                       </p>
-                      <div className="flex gap-2">
-                        <button className="btn-secondary" type="button" disabled={!pagination.hasPrevious} onClick={() => handleFilterChange("page", Math.max(filters.page - 1, 1))}>
+                      <div className="grid gap-2 sm:flex">
+                        <button className="btn-secondary w-full sm:w-auto" type="button" disabled={!pagination.hasPrevious} onClick={() => handleFilterChange("page", Math.max(filters.page - 1, 1))}>
                           <FiChevronLeft /> Previous
                         </button>
-                        <button className="btn-secondary" type="button" disabled={!pagination.hasNext} onClick={() => handleFilterChange("page", filters.page + 1)}>
+                        <button className="btn-secondary w-full sm:w-auto" type="button" disabled={!pagination.hasNext} onClick={() => handleFilterChange("page", filters.page + 1)}>
                           Next <FiChevronRight />
                         </button>
                       </div>
@@ -617,7 +753,8 @@ function Admin() {
                       "Set ADMIN_KEY in Vercel for server-side request validation.",
                       "Keep VITE_ADMIN_KEY only for the frontend login prompt if you want a matching UI gate.",
                       "Set MONGODB_URI in Vercel. Messages stay in MongoDB after redeploy.",
-                      "Optional email notification can be wired later without changing the CRM data model.",
+                      "Optional Gmail notifications use EMAIL_USER and EMAIL_APP_PASSWORD without exposing credentials to the frontend.",
+                      "Analytics can be enabled with VITE_GA_MEASUREMENT_ID and VITE_CLARITY_PROJECT_ID.",
                     ].map((item) => (
                       <div className="glass-panel p-5" key={item}>
                         <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item}</p>
@@ -630,11 +767,11 @@ function Admin() {
 
             {drawerMessage && (
               <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm" onClick={() => setDrawerMessage(null)}>
-                <div className="absolute right-0 top-0 h-full w-full max-w-2xl overflow-y-auto bg-white p-6 shadow-2xl dark:bg-slate-950" onClick={(event) => event.stopPropagation()}>
+                <div className="absolute right-0 top-0 h-full w-full max-w-2xl overflow-y-auto bg-white p-4 shadow-2xl dark:bg-slate-950 sm:p-6" onClick={(event) => event.stopPropagation()}>
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">{drawerMessage.source}</p>
-                      <h3 className="mt-2 text-2xl font-black text-slate-950 dark:text-white">{drawerMessage.subject || drawerMessage.projectType || "Message"}</h3>
+                      <h3 className="mt-2 text-xl font-black text-slate-950 dark:text-white sm:text-2xl">{drawerMessage.subject || drawerMessage.projectType || "Message"}</h3>
                     </div>
                     <button className="icon-btn" type="button" onClick={() => setDrawerMessage(null)} aria-label="Close details">
                       <FiX />
@@ -665,38 +802,38 @@ function Admin() {
                     <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-700 dark:text-slate-200">{drawerMessage.message}</p>
                   </div>
 
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    <button className="btn-secondary" type="button" onClick={() => handleCopy(drawerMessage.email, "email")}>
+                  <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap">
+                    <button className="btn-secondary w-full sm:w-auto" type="button" onClick={() => handleCopy(drawerMessage.email, "email")}>
                       Copy Email <FiCopy />
                     </button>
-                    <button className="btn-secondary" type="button" onClick={() => handleCopy(`${drawerMessage.name}\n${drawerMessage.email}\n${drawerMessage.message}`, "message")}>
+                    <button className="btn-secondary w-full sm:w-auto" type="button" onClick={() => handleCopy(`${drawerMessage.name}\n${drawerMessage.email}\n${drawerMessage.message}`, "message")}>
                       Copy Full Message <FiCopy />
                     </button>
                     {drawerMessage.status !== "read" && drawerMessage.status !== "archived" && (
-                      <button className="btn-secondary" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "read")}>
+                      <button className="btn-secondary w-full sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "read")}>
                         Mark Read
                       </button>
                     )}
                     {drawerMessage.status !== "new" && drawerMessage.status !== "archived" && (
-                      <button className="btn-secondary" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "new")}>
+                      <button className="btn-secondary w-full sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "new")}>
                         Mark Unread
                       </button>
                     )}
                     {drawerMessage.status !== "replied" && drawerMessage.status !== "archived" && (
-                      <button className="btn-secondary" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "replied")}>
+                      <button className="btn-secondary w-full sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "replied")}>
                         Mark Replied
                       </button>
                     )}
                     {drawerMessage.status !== "archived" ? (
-                      <button className="btn-secondary" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "archived")}>
+                      <button className="btn-secondary w-full sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "archived")}>
                         Archive
                       </button>
                     ) : (
-                      <button className="btn-secondary" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "read")}>
+                      <button className="btn-secondary w-full sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleStatusUpdate(drawerMessage, "read")}>
                         Restore
                       </button>
                     )}
-                    <button className="btn-secondary text-rose-600 dark:text-rose-300" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleDelete(drawerMessage)}>
+                    <button className="btn-secondary w-full text-rose-600 dark:text-rose-300 sm:w-auto" type="button" disabled={actionId === drawerMessage.id} onClick={() => handleDelete(drawerMessage)}>
                       Delete Permanently <FiTrash2 />
                     </button>
                   </div>

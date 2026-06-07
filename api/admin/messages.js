@@ -1,10 +1,15 @@
 const { deleteMessage, getOverviewStats, listMessages, updateMessage } = require("../_lib/messages");
+const { enforceRateLimit } = require("../_lib/rateLimit");
 const { sanitizeErrorMessage, sendJson } = require("../_lib/response");
 const { assertAdminAccess } = require("../_lib/auth");
 const { parseBody } = require("../_lib/request");
 
 module.exports = async (req, res) => {
   try {
+    if (enforceRateLimit(req, res, { keyPrefix: "admin-messages", max: 120, windowMs: 60 * 1000 })) {
+      return;
+    }
+
     assertAdminAccess(req);
 
     if (req.method === "GET") {

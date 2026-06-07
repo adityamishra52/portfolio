@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import AnalyticsProvider from "./components/AnalyticsProvider";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -34,6 +35,7 @@ function AppShell({ theme, onThemeToggle }) {
     <div className="min-h-screen overflow-x-hidden">
       <div className="fixed inset-0 -z-10 bg-page" />
       <ScrollToTop />
+      <AnalyticsProvider />
       {!isAdmin && <Navbar theme={theme} onThemeToggle={onThemeToggle} />}
       <main>
         <Suspense fallback={<div className="page-section text-slate-950 dark:text-white">Loading page...</div>}>

@@ -2,11 +2,12 @@ import { Link, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { FiArrowLeft, FiArrowUpRight } from "react-icons/fi";
 import SEO from "../components/SEO";
-import { getProjectBySlug } from "../data/projects";
+import { getProjectBySlug, projects } from "../data/projects";
 import { siteUrl, profile } from "../data/portfolio";
 import Lightbox from "../components/Lightbox";
 import ProjectImage from "../components/ProjectImage";
 import useImagePreload from "../utils/useImagePreload";
+import { trackEvent } from "../utils/analytics";
 
 const TECH_STACK_GROUPS = [
   {
@@ -99,6 +100,10 @@ function ProjectDetails() {
 
     return grouped;
   }, [project.tech]);
+  const relatedProjects = useMemo(
+    () => projects.filter((item) => project.related?.includes(item.slug)).slice(0, 3),
+    [project.related]
+  );
 
   return (
     <>
@@ -121,9 +126,18 @@ function ProjectDetails() {
             <span className="eyebrow">{project.category}</span>
             <h1 className="page-title">{project.title}</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">{project.description}</p>
+            {project.summary && (
+              <p className="mt-4 max-w-3xl text-base leading-7 text-slate-500 dark:text-slate-400">{project.summary}</p>
+            )}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               {project.live || project.github ? (
-                <a className="btn-primary" href={project.live || project.github} target="_blank" rel="noreferrer">
+                <a
+                  className="btn-primary"
+                  href={project.live || project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "hero-live-demo" })}
+                >
                   Live Demo <FiArrowUpRight />
                 </a>
               ) : (
@@ -132,7 +146,13 @@ function ProjectDetails() {
                 </button>
               )}
               {project.github && (
-                <a className="btn-secondary" href={project.github} target="_blank" rel="noreferrer">
+                <a
+                  className="btn-secondary"
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackEvent("project_click", { project_slug: project.slug, target: "github" })}
+                >
                   GitHub <FiArrowUpRight />
                 </a>
               )}
@@ -225,6 +245,38 @@ function ProjectDetails() {
           </div>
         </div>
 
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          {[
+            { title: "Key Features", items: project.features || [] },
+            { title: "Challenges", items: project.challenges || [] },
+            { title: "Solutions", items: project.solutions || [] },
+          ].map((section) => (
+            <div className="glass-panel p-6" key={section.title}>
+              <h3 className="text-xl font-black text-slate-950 dark:text-white">{section.title}</h3>
+              <ul className="mt-4 grid gap-3">
+                {section.items.map((item) => (
+                  <li key={item} className="rounded-2xl border border-slate-200/70 bg-white/55 p-4 text-sm leading-6 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {project.results?.length > 0 && (
+          <div className="mt-10 glass-panel p-6">
+            <h3 className="text-xl font-black text-slate-950 dark:text-white">Project Outcome</h3>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              {project.results.map((item) => (
+                <div key={item} className="rounded-2xl border border-slate-200/70 bg-white/55 p-4 text-sm leading-6 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-10">
           <h3 className="text-xl font-black text-slate-950 dark:text-white">Project Gallery</h3>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Click any image to view larger.</p>
@@ -241,6 +293,38 @@ function ProjectDetails() {
             ))}
           </div>
         </div>
+
+        {relatedProjects.length > 0 && (
+          <div className="mt-10">
+            <div className="section-heading">
+              <span className="eyebrow">Related Projects</span>
+              <h3>More case studies from the same stack and product direction</h3>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {relatedProjects.map((item) => (
+                <Link
+                  key={item.slug}
+                  to={`/projects/${item.slug}`}
+                  onClick={() => trackEvent("project_click", { project_slug: item.slug, target: "related-project" })}
+                  className="glass-panel block p-4 transition hover:-translate-y-1"
+                >
+                  <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-900">
+                    <ProjectImage
+                      src={item.preview || "/projects/fallback.svg"}
+                      alt={item.previewAlt || item.title}
+                      className="h-full w-full"
+                      imageClassName="relative z-10 h-full w-full object-cover transition duration-700"
+                    />
+                    <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                  </div>
+                  <p className="mt-4 text-xs font-black uppercase tracking-wide text-teal-700 dark:text-teal-300">{item.category}</p>
+                  <h4 className="mt-2 text-lg font-black text-slate-950 dark:text-white">{item.title}</h4>
+                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.summary || item.description}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Lightbox for gallery and preview */}
         <Lightbox
           images={lightboxImages}

@@ -6,6 +6,7 @@ import { FiArrowRight, FiHelpCircle, FiMail, FiMessageSquare, FiPhone, FiSend, F
 import SEO from "../components/SEO";
 import { profile } from "../data/portfolio";
 import { saveContactMessage } from "../utils/storage";
+import { trackEvent } from "../utils/analytics";
 
 const initialForm = { name: "", email: "", phone: "", subject: "", message: "" };
 
@@ -81,6 +82,10 @@ function Contact() {
 
     try {
       const result = await saveContactMessage(form);
+      trackEvent("contact_form_submit", {
+        source: "contact",
+        subject: form.subject.trim(),
+      });
       setForm(initialForm);
       setSuccess(result.message || "Message saved successfully. I will check it from the admin dashboard.");
     } catch (saveError) {
