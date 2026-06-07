@@ -5,8 +5,11 @@ import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
 import { profile, skills } from "../data/portfolio";
 import { projects } from "../data/projects";
+import useImagePreload from "../utils/useImagePreload";
 
 function Home() {
+  useImagePreload(projects.slice(0, 3).map((project) => project.preview).filter(Boolean));
+
   return (
     <>
       <SEO

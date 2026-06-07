@@ -21,12 +21,20 @@ const getEntries = (storageKey) => {
 };
 
 const saveEntries = (storageKey, entries) => {
+  if (typeof window === "undefined") return entries;
   window.localStorage.setItem(storageKey, JSON.stringify(entries));
   return entries;
 };
 
-const saveRecord = (storageKey, payload) => {
-  const currentEntries = getEntries(storageKey);
+const upsertLocalEntry = (storageKey, entry) => {
+  const nextEntries = [entry, ...getEntries(storageKey).filter((current) => current.id !== entry.id)];
+  nextEntries.sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime());
+  return saveEntries(storageKey, nextEntries);
+};
+
+const removeLocalEntry = (storageKey, id) => saveEntries(storageKey, getEntries(storageKey).filter((entry) => entry.id !== id));
+
+const saveFallbackRecord = (storageKey, payload) => {
   const nextEntry = {
     id: createId(),
     read: false,
@@ -34,54 +42,179 @@ const saveRecord = (storageKey, payload) => {
     ...payload,
   };
 
-  saveEntries(storageKey, [nextEntry, ...currentEntries]);
+  upsertLocalEntry(storageKey, nextEntry);
   return nextEntry;
 };
 
-const deleteRecord = (storageKey, id) => {
-  const nextEntries = getEntries(storageKey).filter((entry) => entry.id !== id);
-  return saveEntries(storageKey, nextEntries);
+const sanitizeContactMessage = (message) => ({
+  name: message.name.trim(),
+  email: message.email.trim(),
+  subject: message.subject.trim(),
+  message: message.message.trim(),
+});
+
+const sanitizeHireRequest = (request) => ({
+  name: request.name.trim(),
+  email: request.email.trim(),
+  company: request.company.trim(),
+  projectType: request.projectType.trim(),
+  budget: request.budget.trim(),
+  timeline: request.timeline.trim(),
+  message: request.message.trim(),
+});
+
+const parseResponse = async (response) => {
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : {};
+
+  if (!response.ok) {
+    const error = new Error(data.error || data.message || `Request failed with status ${response.status}.`);
+    error.status = response.status;
+    throw error;
+  }
+
+  return data;
 };
 
-const toggleRecordRead = (storageKey, id) => {
-  const nextEntries = getEntries(storageKey).map((entry) =>
-    entry.id === id ? { ...entry, read: !entry.read } : entry
-  );
-  return saveEntries(storageKey, nextEntries);
+const requestJson = async (url, options = {}) => {
+  const response = await fetch(url, options);
+  return parseResponse(response);
 };
 
-export const getContactMessages = () => getEntries(CONTACT_MESSAGE_KEY);
+const adminHeaders = (adminKey) => ({
+  "Content-Type": "application/json",
+  "x-admin-key": adminKey,
+});
 
-export const saveContactMessage = (message) =>
-  saveRecord(CONTACT_MESSAGE_KEY, {
-    type: "contact",
-    name: message.name.trim(),
-    email: message.email.trim(),
-    subject: message.subject.trim(),
-    message: message.message.trim(),
+const shouldFallbackToLocal = (error) => !error.status || error.status >= 500;
+
+export const saveContactMessage = async (message) => {
+  const payload = sanitizeContactMessage(message);
+
+  try {
+    const data = await requestJson("/api/contact-messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    upsertLocalEntry(CONTACT_MESSAGE_KEY, data.entry);
+    return { entry: data.entry, source: "database" };
+  } catch (error) {
+    if (!shouldFallbackToLocal(error)) {
+      throw error;
+    }
+
+    const entry = saveFallbackRecord(CONTACT_MESSAGE_KEY, payload);
+    return {
+      entry,
+      source: "fallback",
+      errorMessage: error.message || "Could not save to the database.",
+    };
+  }
+};
+
+export const saveHireRequest = async (request) => {
+  const payload = sanitizeHireRequest(request);
+
+  try {
+    const data = await requestJson("/api/hire-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    upsertLocalEntry(HIRE_REQUEST_KEY, data.entry);
+    return { entry: data.entry, source: "database" };
+  } catch (error) {
+    if (!shouldFallbackToLocal(error)) {
+      throw error;
+    }
+
+    const entry = saveFallbackRecord(HIRE_REQUEST_KEY, payload);
+    return {
+      entry,
+      source: "fallback",
+      errorMessage: error.message || "Could not save to the database.",
+    };
+  }
+};
+
+export const getContactMessages = async (adminKey) => {
+  try {
+    const data = await requestJson("/api/admin/messages?type=contact", {
+      headers: adminHeaders(adminKey),
+    });
+
+    saveEntries(CONTACT_MESSAGE_KEY, data.entries);
+    return { entries: data.entries, source: "database" };
+  } catch (error) {
+    if (!shouldFallbackToLocal(error)) throw error;
+    return {
+      entries: getEntries(CONTACT_MESSAGE_KEY),
+      source: "fallback",
+      errorMessage: error.message || "Could not load contact messages from the database.",
+    };
+  }
+};
+
+export const getHireRequests = async (adminKey) => {
+  try {
+    const data = await requestJson("/api/admin/messages?type=hire", {
+      headers: adminHeaders(adminKey),
+    });
+
+    saveEntries(HIRE_REQUEST_KEY, data.entries);
+    return { entries: data.entries, source: "database" };
+  } catch (error) {
+    if (!shouldFallbackToLocal(error)) throw error;
+    return {
+      entries: getEntries(HIRE_REQUEST_KEY),
+      source: "fallback",
+      errorMessage: error.message || "Could not load hire requests from the database.",
+    };
+  }
+};
+
+export const setContactMessageRead = async (id, read, adminKey) => {
+  const data = await requestJson("/api/admin/messages", {
+    method: "PATCH",
+    headers: adminHeaders(adminKey),
+    body: JSON.stringify({ type: "contact", id, read }),
   });
 
-export const deleteContactMessage = (id) => deleteRecord(CONTACT_MESSAGE_KEY, id);
+  upsertLocalEntry(CONTACT_MESSAGE_KEY, data.entry);
+  return data.entry;
+};
 
-export const toggleContactMessageRead = (id) => toggleRecordRead(CONTACT_MESSAGE_KEY, id);
-
-export const getHireRequests = () => getEntries(HIRE_REQUEST_KEY);
-
-export const saveHireRequest = (request) =>
-  saveRecord(HIRE_REQUEST_KEY, {
-    type: "hire",
-    name: request.name.trim(),
-    email: request.email.trim(),
-    company: request.company.trim(),
-    projectType: request.projectType.trim(),
-    budget: request.budget.trim(),
-    timeline: request.timeline.trim(),
-    message: request.message.trim(),
+export const setHireRequestRead = async (id, read, adminKey) => {
+  const data = await requestJson("/api/admin/messages", {
+    method: "PATCH",
+    headers: adminHeaders(adminKey),
+    body: JSON.stringify({ type: "hire", id, read }),
   });
 
-export const deleteHireRequest = (id) => deleteRecord(HIRE_REQUEST_KEY, id);
+  upsertLocalEntry(HIRE_REQUEST_KEY, data.entry);
+  return data.entry;
+};
 
-export const toggleHireRequestRead = (id) => toggleRecordRead(HIRE_REQUEST_KEY, id);
+export const deleteContactMessage = async (id, adminKey) => {
+  await requestJson(`/api/admin/messages?type=contact&id=${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: { "x-admin-key": adminKey },
+  });
+
+  return removeLocalEntry(CONTACT_MESSAGE_KEY, id);
+};
+
+export const deleteHireRequest = async (id, adminKey) => {
+  await requestJson(`/api/admin/messages?type=hire&id=${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: { "x-admin-key": adminKey },
+  });
+
+  return removeLocalEntry(HIRE_REQUEST_KEY, id);
+};
 
 export const getSubmissionStats = (entries) => ({
   total: entries.length,

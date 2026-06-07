@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiLock, FiTrash2 } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiLock, FiTrash2 } from "react-icons/fi";
 import SEO from "../components/SEO";
 import {
   deleteContactMessage,
@@ -7,8 +7,8 @@ import {
   getContactMessages,
   getHireRequests,
   getSubmissionStats,
-  toggleContactMessageRead,
-  toggleHireRequestRead,
+  setContactMessageRead,
+  setHireRequestRead,
 } from "../utils/storage";
 
 const adminTabs = [
@@ -21,41 +21,98 @@ function Admin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("contact");
-  const [contactMessages, setContactMessages] = useState(() => getContactMessages());
-  const [hireRequests, setHireRequests] = useState(() => getHireRequests());
-  const adminKey = import.meta.env.VITE_ADMIN_KEY || "your-secret-key";
+  const [contactMessages, setContactMessages] = useState([]);
+  const [hireRequests, setHireRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dashboardError, setDashboardError] = useState("");
+  const [fallbackNotice, setFallbackNotice] = useState("");
+  const [actionId, setActionId] = useState("");
+  const [expandedId, setExpandedId] = useState("");
+  const adminKey = import.meta.env.VITE_ADMIN_KEY?.trim();
 
   const contactStats = useMemo(() => getSubmissionStats(contactMessages), [contactMessages]);
   const hireStats = useMemo(() => getSubmissionStats(hireRequests), [hireRequests]);
   const currentEntries = activeTab === "contact" ? contactMessages : hireRequests;
   const currentStats = activeTab === "contact" ? contactStats : hireStats;
 
-  const login = (event) => {
+  const login = async (event) => {
     event.preventDefault();
-    if (key === adminKey) {
+
+    if (!adminKey) {
+      setError("VITE_ADMIN_KEY is missing. Add it to your environment before using the admin dashboard.");
+      return;
+    }
+
+    if (key !== adminKey) {
+      setError("Invalid admin key.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setDashboardError("");
+    setFallbackNotice("");
+
+    try {
+      const [contactResult, hireResult] = await Promise.all([getContactMessages(key), getHireRequests(key)]);
+      setContactMessages(contactResult.entries);
+      setHireRequests(hireResult.entries);
       setAuthenticated(true);
-      setError("");
-      setContactMessages(getContactMessages());
-      setHireRequests(getHireRequests());
-      return;
+
+      const notices = [contactResult, hireResult]
+        .filter((result) => result.source === "fallback")
+        .map((result) => result.errorMessage)
+        .filter(Boolean);
+
+      if (notices.length > 0) {
+        setFallbackNotice("Database data is temporarily unavailable, so the dashboard is showing only this device's fallback cache.");
+      }
+    } catch (loadError) {
+      setError(loadError.message || "Could not load admin data.");
+    } finally {
+      setIsLoading(false);
     }
-    setError("Invalid admin key.");
   };
 
-  const handleToggleRead = (id) => {
-    if (activeTab === "contact") {
-      setContactMessages(toggleContactMessageRead(id));
-      return;
+  const handleToggleRead = async (entry) => {
+    setDashboardError("");
+    setActionId(entry.id);
+
+    try {
+      if (activeTab === "contact") {
+        const updatedEntry = await setContactMessageRead(entry.id, !entry.read, key);
+        setContactMessages((current) => current.map((item) => (item.id === updatedEntry.id ? updatedEntry : item)));
+        return;
+      }
+
+      const updatedEntry = await setHireRequestRead(entry.id, !entry.read, key);
+      setHireRequests((current) => current.map((item) => (item.id === updatedEntry.id ? updatedEntry : item)));
+    } catch (actionError) {
+      setDashboardError(actionError.message || "Could not update message status.");
+    } finally {
+      setActionId("");
     }
-    setHireRequests(toggleHireRequestRead(id));
   };
 
-  const handleDelete = (id) => {
-    if (activeTab === "contact") {
-      setContactMessages(deleteContactMessage(id));
-      return;
+  const handleDelete = async (id) => {
+    setDashboardError("");
+    setActionId(id);
+
+    try {
+      if (activeTab === "contact") {
+        const nextEntries = await deleteContactMessage(id, key);
+        setContactMessages(nextEntries);
+      } else {
+        const nextEntries = await deleteHireRequest(id, key);
+        setHireRequests(nextEntries);
+      }
+
+      setExpandedId((current) => (current === id ? "" : current));
+    } catch (actionError) {
+      setDashboardError(actionError.message || "Could not delete this message.");
+    } finally {
+      setActionId("");
     }
-    setHireRequests(deleteHireRequest(id));
   };
 
   return (
@@ -74,7 +131,7 @@ function Admin() {
             </div>
             <h1 className="text-3xl font-black text-slate-950 dark:text-white">Admin Login</h1>
             <p className="mt-3 leading-7 text-slate-600 dark:text-slate-300">
-              Enter the private admin key to view contact messages and hire requests stored in localStorage.
+              Enter the private admin key to view contact messages and hire requests stored in the shared database.
             </p>
             <label className="form-label mt-6">
               <span>Secret Key</span>
@@ -87,8 +144,8 @@ function Admin() {
               />
             </label>
             {error && <p className="form-error mt-3">{error}</p>}
-            <button className="btn-primary mt-6 w-full" type="submit">
-              Login
+            <button className="btn-primary mt-6 w-full" type="submit" disabled={isLoading}>
+              {isLoading ? "Checking..." : "Login"}
             </button>
           </form>
         ) : (
@@ -101,6 +158,9 @@ function Admin() {
                 professional requests independently.
               </p>
             </div>
+
+            {fallbackNotice && <div className="mb-6 rounded-2xl bg-amber-500/10 p-4 font-semibold text-amber-700 dark:text-amber-300">{fallbackNotice}</div>}
+            {dashboardError && <div className="mb-6 rounded-2xl bg-rose-500/10 p-4 font-semibold text-rose-700 dark:text-rose-300">{dashboardError}</div>}
 
             <div className="mb-8 flex flex-wrap gap-3">
               {adminTabs.map((tab) => {
@@ -143,7 +203,9 @@ function Admin() {
             </div>
 
             <div className="grid gap-4">
-              {currentEntries.length === 0 ? (
+              {isLoading ? (
+                <div className="glass-panel p-8 text-slate-600 dark:text-slate-300">Loading messages...</div>
+              ) : currentEntries.length === 0 ? (
                 <div className="glass-panel p-8 text-slate-600 dark:text-slate-300">
                   {activeTab === "contact" ? "No contact messages yet." : "No hire requests yet."}
                 </div>
@@ -181,15 +243,22 @@ function Admin() {
                         )}
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <button className="btn-secondary" type="button" onClick={() => handleToggleRead(entry.id)}>
+                        <button
+                          className="btn-secondary"
+                          type="button"
+                          onClick={() => setExpandedId((current) => (current === entry.id ? "" : entry.id))}
+                        >
+                          {expandedId === entry.id ? "Hide Message" : "View Message"} {expandedId === entry.id ? <FiEyeOff /> : <FiEye />}
+                        </button>
+                        <button className="btn-secondary" type="button" disabled={actionId === entry.id} onClick={() => handleToggleRead(entry)}>
                           Mark {entry.read ? "Unread" : "Read"}
                         </button>
-                        <button className="btn-secondary text-rose-600 dark:text-rose-300" type="button" onClick={() => handleDelete(entry.id)}>
+                        <button className="btn-secondary text-rose-600 dark:text-rose-300" disabled={actionId === entry.id} type="button" onClick={() => handleDelete(entry.id)}>
                           <FiTrash2 />
                         </button>
                       </div>
                     </div>
-                    <p className="mt-5 whitespace-pre-wrap leading-7 text-slate-600 dark:text-slate-300">{entry.message}</p>
+                    {expandedId === entry.id && <p className="mt-5 whitespace-pre-wrap leading-7 text-slate-600 dark:text-slate-300">{entry.message}</p>}
                   </article>
                 ))
               )}

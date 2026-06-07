@@ -41,7 +41,7 @@ const faqCards = [
   },
   {
     question: "Will my message be saved?",
-    answer: "Yes. Contact messages are saved locally and shown in the admin dashboard as Contact Messages.",
+    answer: "Yes. Contact messages are saved to the shared portfolio inbox and shown in the admin dashboard as Contact Messages.",
   },
   {
     question: "Can I ask about an existing project?",
@@ -53,6 +53,9 @@ function Contact() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [fallbackNotice, setFallbackNotice] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
     const nextErrors = {};
@@ -69,13 +72,31 @@ function Contact() {
     setErrors((current) => ({ ...current, [field]: "" }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setSuccess("");
+    setSubmitError("");
+    setFallbackNotice("");
     if (!validate()) return;
-    saveContactMessage(form);
-    setForm(initialForm);
-    setSuccess("Message saved successfully. I will check it from the admin dashboard.");
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await saveContactMessage(form);
+      setForm(initialForm);
+
+      if (result.source === "database") {
+        setSuccess("Message saved successfully. I will check it from the admin dashboard.");
+        return;
+      }
+
+      setFallbackNotice("Database save failed, so this message was saved only on this device as a fallback. It will not appear cross-device until the database connection is fixed.");
+      setSubmitError(result.errorMessage || "Could not save your message to the database.");
+    } catch (saveError) {
+      setSubmitError(saveError.message || "Could not save your message.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -198,12 +219,14 @@ function Contact() {
                 {errors.message && <small className="form-error">{errors.message}</small>}
               </label>
 
+              {submitError && <p className="rounded-2xl bg-rose-500/10 p-4 font-semibold text-rose-700 dark:text-rose-300">{submitError}</p>}
+              {fallbackNotice && <p className="rounded-2xl bg-amber-500/10 p-4 font-semibold text-amber-700 dark:text-amber-300">{fallbackNotice}</p>}
               {success && <p className="rounded-2xl bg-emerald-500/10 p-4 font-semibold text-emerald-700 dark:text-emerald-300">{success}</p>}
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Saved separately as a contact message in the admin dashboard.</p>
-                <button className="btn-primary" type="submit">
-                  Send Message <FiSend />
+                <p className="text-sm text-slate-500 dark:text-slate-400">Saved as a shared contact message in the admin dashboard after the database confirms the submission.</p>
+                <button className="btn-primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Saving..." : "Send Message"} <FiSend />
                 </button>
               </div>
             </motion.form>

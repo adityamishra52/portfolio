@@ -15,20 +15,18 @@ function ProjectCard({ project, featured = false }) {
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
     >
       <div className="relative min-h-56 overflow-hidden rounded-t-3xl p-0">
-        <div className={`absolute -inset-0.5 rounded-t-3xl bg-gradient-to-r ${project.gradient} opacity-90 blur-sm`} />
-        <div className="relative overflow-hidden rounded-t-3xl">
-          {project.preview ? (
-            <ProjectImage
-              src={project.preview}
-              alt={project.previewAlt || project.title}
-              className="aspect-video w-full overflow-hidden rounded-t-2xl"
-              maxHeight="280px"
-            />
-          ) : (
-            <ProjectImage src="/projects/fallback.svg" alt="Preview unavailable" className="aspect-video w-full overflow-hidden rounded-t-2xl" maxHeight="280px" />
-          )}
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-3xl bg-slate-900">
+          <ProjectImage
+            src={project.preview || "/projects/fallback.svg"}
+            alt={project.previewAlt || project.title}
+            className="h-full w-full"
+            imageClassName="relative z-10 h-full w-full object-cover transition duration-700"
+            maxHeight="280px"
+            sizes={featured ? "(min-width: 1280px) 66vw, (min-width: 1024px) 58vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw"}
+          />
+          <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-          <div className="absolute inset-0 flex flex-col justify-between p-5 text-white">
+          <div className="absolute inset-0 z-30 flex flex-col justify-between p-5 text-white">
             <div className="flex gap-2">
               <span className="h-3 w-3 rounded-full bg-white/70" />
               <span className="h-3 w-3 rounded-full bg-white/40" />

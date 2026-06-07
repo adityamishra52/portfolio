@@ -62,6 +62,9 @@ function HireMe() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [fallbackNotice, setFallbackNotice] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = () => {
     const nextErrors = {};
@@ -81,13 +84,31 @@ function HireMe() {
     setErrors((current) => ({ ...current, [field]: "" }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setSuccess("");
+    setSubmitError("");
+    setFallbackNotice("");
     if (!validate()) return;
-    saveHireRequest(form);
-    setForm(initialForm);
-    setSuccess("Hire request saved successfully. I will review it from the admin dashboard.");
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await saveHireRequest(form);
+      setForm(initialForm);
+
+      if (result.source === "database") {
+        setSuccess("Hire request saved successfully. I will review it from the admin dashboard.");
+        return;
+      }
+
+      setFallbackNotice("Database save failed, so this hire request was saved only on this device as a fallback. It will not appear cross-device until the database connection is fixed.");
+      setSubmitError(result.errorMessage || "Could not save your hire request to the database.");
+    } catch (saveError) {
+      setSubmitError(saveError.message || "Could not save your hire request.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -241,12 +262,14 @@ function HireMe() {
                   {errors.message && <small className="form-error">{errors.message}</small>}
                 </label>
 
+                {submitError && <p className="rounded-2xl bg-rose-500/10 p-4 font-semibold text-rose-700 dark:text-rose-300">{submitError}</p>}
+                {fallbackNotice && <p className="rounded-2xl bg-amber-500/10 p-4 font-semibold text-amber-700 dark:text-amber-300">{fallbackNotice}</p>}
                 {success && <p className="rounded-2xl bg-emerald-500/10 p-4 font-semibold text-emerald-700 dark:text-emerald-300">{success}</p>}
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Saved separately as a Hire Me request in the admin dashboard.</p>
-                  <button className="btn-primary" type="submit">
-                    Send Hire Request <FiSend />
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Saved as a shared Hire Me request in the admin dashboard after the database confirms the submission.</p>
+                  <button className="btn-primary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : "Send Hire Request"} <FiSend />
                   </button>
                 </div>
               </motion.form>

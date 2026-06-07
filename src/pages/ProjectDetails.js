@@ -6,6 +6,7 @@ import { getProjectBySlug } from "../data/projects";
 import { siteUrl, profile } from "../data/portfolio";
 import Lightbox from "../components/Lightbox";
 import ProjectImage from "../components/ProjectImage";
+import useImagePreload from "../utils/useImagePreload";
 
 const TECH_STACK_GROUPS = [
   {
@@ -52,6 +53,7 @@ function ProjectDetails() {
   }
 
   const previewImage = project.preview || "/projects/fallback.svg";
+  useImagePreload([previewImage, ...(project.gallery || []).slice(0, 3)]);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["CreativeWork", project.github ? "SoftwareSourceCode" : "SoftwareApplication"],
@@ -153,17 +155,23 @@ function ProjectDetails() {
 
               <button
                 type="button"
-                className="mt-4 block w-full overflow-hidden rounded-[1.5rem] border border-white/20 bg-white/5 text-left"
+                className="mt-4 block w-full overflow-hidden rounded-[1.5rem] border border-white/20 bg-slate-900 text-left"
                 onClick={() => {
                   setLightboxIndex(0);
                   setLightboxOpen(true);
                 }}
               >
-                <ProjectImage
-                  src={previewImage}
-                  alt={project.previewAlt || `${project.title} preview`}
-                  className="h-[260px] w-full sm:h-[320px]"
-                />
+                <div className="relative aspect-video w-full overflow-hidden rounded-[1.5rem] bg-slate-900">
+                  <ProjectImage
+                    src={previewImage}
+                    alt={project.previewAlt || `${project.title} preview`}
+                    className="h-full w-full"
+                    imageClassName="relative z-10 h-full w-full object-cover transition duration-700"
+                    priority
+                    sizes="(min-width: 1024px) 42vw, 100vw"
+                  />
+                  <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                </div>
               </button>
               <small className="mt-3 block text-white/70">Click the preview to expand.</small>
             </div>

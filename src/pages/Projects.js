@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
+import ProjectImage from "../components/ProjectImage";
 import { projects } from "../data/projects";
 
 function Projects() {
@@ -82,12 +83,23 @@ function Projects() {
               >
                 <Link
                   to={`/projects/${project.slug}`}
-                  className={`group relative block min-h-64 overflow-hidden rounded-2xl bg-gradient-to-br ${project.gradient} p-6 shadow-card transition hover:-translate-y-1 dark:shadow-card-dark`}
+                  className="group relative block overflow-hidden rounded-2xl bg-slate-900 shadow-card transition hover:-translate-y-1 dark:shadow-card-dark"
                 >
-                  <span className="relative z-10 text-xs font-black uppercase text-white/75">{project.category}</span>
-                  <strong className="relative z-10 mt-16 block text-2xl leading-tight text-white">{project.title}</strong>
-                  <p className="relative z-10 mt-3 text-sm leading-relaxed text-white/90">{project.highlights[0]}</p>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent opacity-40 transition group-hover:opacity-70" />
+                  <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
+                    <ProjectImage
+                      src={project.preview || "/projects/fallback.svg"}
+                      alt={project.previewAlt || project.title}
+                      className="h-full w-full"
+                      imageClassName="relative z-10 h-full w-full object-cover transition duration-700"
+                      sizes="(min-width: 1280px) 20vw, (min-width: 768px) 45vw, 100vw"
+                    />
+                    <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                    <div className="absolute inset-0 z-30 flex flex-col justify-end p-6">
+                      <span className="text-xs font-black uppercase text-white/75">{project.category}</span>
+                      <strong className="mt-3 block text-2xl leading-tight text-white">{project.title}</strong>
+                      <p className="mt-3 text-sm leading-relaxed text-white/90">{project.highlights[0]}</p>
+                    </div>
+                  </div>
                 </Link>
               </motion.div>
             ))}
