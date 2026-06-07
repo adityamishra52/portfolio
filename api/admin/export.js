@@ -3,6 +3,7 @@ const { enforceRateLimit } = require("../_lib/rateLimit");
 const { sanitizeErrorMessage } = require("../_lib/response");
 const { assertAdminAccess } = require("../_lib/auth");
 const { toCsv } = require("../_lib/csv");
+const { toExcelBuffer } = require("../_lib/excel");
 
 const columns = [
   { key: "source", label: "Source" },
@@ -39,8 +40,17 @@ module.exports = async (req, res) => {
     const entries = await exportMessages(req.query);
     const csv = toCsv(entries, columns);
     const fileType = req.query.type || "all";
+    const format = req.query.format === "excel" ? "excel" : "csv";
 
     res.status(200);
+
+    if (format === "excel") {
+      res.setHeader("Content-Type", "application/vnd.ms-excel");
+      res.setHeader("Content-Disposition", `attachment; filename=\"${fileType}-messages.xls\"`);
+      res.end(toExcelBuffer(entries, columns));
+      return;
+    }
+
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename=\"${fileType}-messages.csv\"`);
     res.end(csv);

@@ -1,4 +1,4 @@
-const { deleteMessage, getOverviewStats, listMessages, updateMessage } = require("../_lib/messages");
+const { deleteMessage, listMessages, updateMessage } = require("../_lib/messages");
 const { enforceRateLimit } = require("../_lib/rateLimit");
 const { sanitizeErrorMessage, sendJson } = require("../_lib/response");
 const { assertAdminAccess } = require("../_lib/auth");
@@ -13,11 +13,6 @@ module.exports = async (req, res) => {
     assertAdminAccess(req);
 
     if (req.method === "GET") {
-      if (req.query.view === "overview") {
-        const overview = await getOverviewStats();
-        return sendJson(res, 200, { success: true, message: "Overview loaded", overview });
-      }
-
       const result = await listMessages(req.query);
       return sendJson(res, 200, { success: true, message: "Messages loaded", ...result });
     }

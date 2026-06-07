@@ -51,10 +51,12 @@ const requestJson = async (url, options = {}) => {
   return parseResponse(response);
 };
 
-const buildAdminHeaders = (adminKey, includeJson = true) => {
-  const headers = {
-    "x-admin-key": adminKey,
-  };
+const buildAdminHeaders = (token, includeJson = true) => {
+  const headers = {};
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   if (includeJson) {
     headers["Content-Type"] = "application/json";
@@ -83,12 +85,19 @@ export const saveHireRequest = async (request) => {
   });
 };
 
-export const getAdminOverview = async (adminKey) =>
-  requestJson("/api/admin/messages?view=overview", {
-    headers: buildAdminHeaders(adminKey, false),
+export const loginAdmin = async (secret) =>
+  requestJson("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret }),
   });
 
-export const getAdminMessages = async (adminKey, params) => {
+export const getAdminOverview = async (token) =>
+  requestJson("/api/admin/overview", {
+    headers: buildAdminHeaders(token, false),
+  });
+
+export const getAdminMessages = async (token, params) => {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -98,24 +107,24 @@ export const getAdminMessages = async (adminKey, params) => {
   });
 
   return requestJson(`/api/admin/messages?${searchParams.toString()}`, {
-    headers: buildAdminHeaders(adminKey, false),
+    headers: buildAdminHeaders(token, false),
   });
 };
 
-export const updateAdminMessage = async (adminKey, id, payload) =>
+export const updateAdminMessage = async (token, id, payload) =>
   requestJson(`/api/admin/messages/${encodeURIComponent(id)}${payload.type ? `?type=${encodeURIComponent(payload.type)}` : ""}`, {
     method: "PATCH",
-    headers: buildAdminHeaders(adminKey),
+    headers: buildAdminHeaders(token),
     body: JSON.stringify(payload),
   });
 
-export const deleteAdminMessage = async (adminKey, id, type) =>
+export const deleteAdminMessage = async (token, id, type) =>
   requestJson(`/api/admin/messages/${encodeURIComponent(id)}?type=${encodeURIComponent(type)}`, {
     method: "DELETE",
-    headers: buildAdminHeaders(adminKey, false),
+    headers: buildAdminHeaders(token, false),
   });
 
-export const exportAdminMessages = async (adminKey, params) => {
+export const exportAdminMessages = async (token, params, format = "csv") => {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -124,8 +133,10 @@ export const exportAdminMessages = async (adminKey, params) => {
     }
   });
 
+  searchParams.set("format", format);
+
   const response = await fetch(`/api/admin/export?${searchParams.toString()}`, {
-    headers: buildAdminHeaders(adminKey, false),
+    headers: buildAdminHeaders(token, false),
   });
 
   const contentType = response.headers.get("content-type") || "";

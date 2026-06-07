@@ -1,8 +1,8 @@
 const { getDb, ObjectId } = require("./mongodb");
 
 const collectionMap = {
-  contact: "contactMessages",
-  hire: "hireRequests",
+  contact: ["contact_messages", "contactMessages"],
+  hire: ["hire_requests", "hireRequests"],
 };
 
 const DEFAULT_PAGE = 1;
@@ -11,15 +11,17 @@ const MAX_LIMIT = 50;
 const SEARCH_FIELDS = ["name", "email", "phone", "subject", "message", "projectType", "budget", "timeline", "company"];
 const VALID_STATUSES = new Set(["new", "read", "replied", "archived"]);
 
-const getCollectionName = (type) => {
-  const collectionName = collectionMap[type];
-  if (!collectionName) {
+const getCollectionNames = (type) => {
+  const collectionNames = collectionMap[type];
+  if (!collectionNames) {
     const error = new Error("Invalid message type.");
     error.statusCode = 400;
     throw error;
   }
-  return collectionName;
+  return collectionNames;
 };
+
+const getPrimaryCollectionName = (type) => getCollectionNames(type)[0];
 
 const formatMessage = (document) => ({
   id: document._id.toString(),
@@ -91,10 +93,15 @@ const normalizePagination = ({ page, limit, sort }) => {
   };
 };
 
-const fetchFromCollection = async (db, type, query, sortDirection) => {
-  const collectionName = getCollectionName(type);
-  const documents = await db.collection(collectionName).find(query).sort({ createdAt: sortDirection }).toArray();
-  return documents.map(formatMessage);
+const fetchFromCollections = async (db, type, query, sortDirection) => {
+  const collectionNames = getCollectionNames(type);
+  const results = await Promise.all(
+    collectionNames.map((collectionName) =>
+      db.collection(collectionName).find(query).sort({ createdAt: sortDirection }).toArray().catch(() => [])
+    )
+  );
+
+  return results.flat().map(formatMessage);
 };
 
 const paginateMessages = (messages, page, limit) => {
@@ -123,8 +130,8 @@ const listMessages = async ({ type = "all", status = "", search = "", page = DEF
 
   if (type === "all") {
     const [contactEntries, hireEntries] = await Promise.all([
-      fetchFromCollection(db, "contact", query, sortDirection),
-      fetchFromCollection(db, "hire", query, sortDirection),
+      fetchFromCollections(db, "contact", query, sortDirection),
+      fetchFromCollections(db, "hire", query, sortDirection),
     ]);
 
     const combined = [...contactEntries, ...hireEntries].sort((left, right) => {
@@ -135,15 +142,13 @@ const listMessages = async ({ type = "all", status = "", search = "", page = DEF
     return paginateMessages(combined, normalizedPage, normalizedLimit);
   }
 
-  const collectionName = getCollectionName(type);
-  const documents = await db.collection(collectionName).find(query).sort({ createdAt: sortDirection }).toArray();
-  const formatted = documents.map(formatMessage);
+  const formatted = await fetchFromCollections(db, type, query, sortDirection);
   return paginateMessages(formatted, normalizedPage, normalizedLimit);
 };
 
 const createMessage = async (type, payload) => {
   const db = await getDb();
-  const collectionName = getCollectionName(type);
+  const collectionName = getPrimaryCollectionName(type);
   const now = new Date();
   const document = {
     ...payload,
@@ -153,14 +158,9 @@ const createMessage = async (type, payload) => {
     updatedAt: now,
   };
 
-  try {
-    const result = await db.collection(collectionName).insertOne(document);
-    console.info("[mongodb] Insert success for %s", collectionName);
-    return formatMessage({ ...document, _id: result.insertedId });
-  } catch (error) {
-    console.error("[mongodb] Insert failed for %s: %s", collectionName, error.message);
-    throw error;
-  }
+  const result = await db.collection(collectionName).insertOne(document);
+  console.info("[mongodb] Insert success for %s", collectionName);
+  return formatMessage({ ...document, _id: result.insertedId });
 };
 
 const findMessageById = async (id, type = "") => {
@@ -168,16 +168,23 @@ const findMessageById = async (id, type = "") => {
   const _id = new ObjectId(id);
 
   if (type && type !== "all") {
-    const collectionName = getCollectionName(type);
-    const document = await db.collection(collectionName).findOne({ _id });
-    return document ? { collectionName, document } : null;
+    const collectionNames = getCollectionNames(type);
+    for (const collectionName of collectionNames) {
+      const document = await db.collection(collectionName).findOne({ _id }).catch(() => null);
+      if (document) {
+        return { collectionName, document };
+      }
+    }
+    return null;
   }
 
   for (const currentType of Object.keys(collectionMap)) {
-    const collectionName = getCollectionName(currentType);
-    const document = await db.collection(collectionName).findOne({ _id });
-    if (document) {
-      return { collectionName, document };
+    const collectionNames = getCollectionNames(currentType);
+    for (const collectionName of collectionNames) {
+      const document = await db.collection(collectionName).findOne({ _id }).catch(() => null);
+      if (document) {
+        return { collectionName, document };
+      }
     }
   }
 
@@ -207,12 +214,6 @@ const updateMessage = async ({ id, type = "", status }) => {
   );
 
   const updatedDocument = await db.collection(found.collectionName).findOne({ _id });
-  if (!updatedDocument) {
-    const error = new Error("Message not found.");
-    error.statusCode = 404;
-    throw error;
-  }
-
   return formatMessage(updatedDocument);
 };
 
@@ -237,11 +238,9 @@ const deleteMessage = async ({ id, type = "" }) => {
 
 const getOverviewStats = async () => {
   const db = await getDb();
-  const [contactCount, hireCount, contactDocs, hireDocs] = await Promise.all([
-    db.collection(collectionMap.contact).countDocuments({}),
-    db.collection(collectionMap.hire).countDocuments({}),
-    db.collection(collectionMap.contact).find({}, { projection: { createdAt: 1, status: 1 } }).toArray(),
-    db.collection(collectionMap.hire).find({}, { projection: { createdAt: 1, status: 1 } }).toArray(),
+  const [contactDocs, hireDocs] = await Promise.all([
+    fetchFromCollections(db, "contact", {}, -1),
+    fetchFromCollections(db, "hire", {}, -1),
   ]);
 
   const allDocs = [...contactDocs, ...hireDocs];
@@ -260,19 +259,20 @@ const getOverviewStats = async () => {
   );
 
   return {
-    totalContactMessages: contactCount,
-    totalHireRequests: hireCount,
-    totalMessages: contactCount + hireCount,
+    totalContactMessages: contactDocs.length,
+    totalHireRequests: hireDocs.length,
+    totalMessages: allDocs.length,
     newMessages: statusCounts.new,
     readMessages: statusCounts.read,
     repliedMessages: statusCounts.replied,
     archivedMessages: statusCounts.archived,
-    latestMessageDate: latestDate ? new Date(latestDate).toISOString() : "",
+    latestMessageDate: latestDate || "",
     sourceBreakdown: {
-      contact: contactCount,
-      "hire-me": hireCount,
+      contact: contactDocs.length,
+      "hire-me": hireDocs.length,
     },
     statusBreakdown: statusCounts,
+    allMessages: allDocs,
   };
 };
 
@@ -285,7 +285,6 @@ module.exports = {
   createMessage,
   deleteMessage,
   exportMessages,
-  findMessageById,
   getOverviewStats,
   listMessages,
   updateMessage,
