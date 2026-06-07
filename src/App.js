@@ -76,6 +76,18 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
+    const handleThemeChange = (event) => {
+      const nextTheme = event?.detail;
+      if (nextTheme === "dark" || nextTheme === "light") {
+        setTheme(nextTheme);
+      }
+    };
+
+    window.addEventListener("portfolio-theme-change", handleThemeChange);
+    return () => window.removeEventListener("portfolio-theme-change", handleThemeChange);
+  }, []);
+
+  useEffect(() => {
     // App startup initialization for Google Analytics and Microsoft Clarity.
     initAnalytics();
     initClarity();

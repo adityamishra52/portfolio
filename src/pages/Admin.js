@@ -20,9 +20,11 @@ import {
   FiLinkedin,
   FiLock,
   FiMail,
+  FiMoon,
   FiRefreshCw,
   FiSearch,
   FiSettings,
+  FiSun,
   FiTrash2,
   FiTrendingUp,
   FiUserCheck,
@@ -111,6 +113,10 @@ function Admin() {
   const [secret, setSecret] = useState("");
   const [token, setToken] = useState(() => session?.token || "");
   const [authenticated, setAuthenticated] = useState(() => Boolean(session?.token));
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    return window.localStorage.getItem("theme") || "dark";
+  });
   const [activeTab, setActiveTab] = useState("overview");
   const [overview, setOverview] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -126,6 +132,13 @@ function Admin() {
   const [actionId, setActionId] = useState("");
 
   const currentQuery = useMemo(() => buildQueryForTab(activeTab, filters), [activeTab, filters]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+    window.localStorage.setItem("theme", theme);
+    window.dispatchEvent(new CustomEvent("portfolio-theme-change", { detail: theme }));
+  }, [theme]);
 
   const loadOverview = async (currentToken) => {
     setIsOverviewLoading(true);
@@ -210,6 +223,10 @@ function Admin() {
     setMessages([]);
     setDrawerMessage(null);
     setFilters(initialFilters);
+  };
+
+  const handleThemeToggle = () => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
   };
 
   const handleFilterChange = (field, value) => {
@@ -325,7 +342,7 @@ function Admin() {
           </form>
         ) : (
           <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
-            <aside className="glass-panel h-fit p-4">
+            <aside className="glass-panel h-fit self-start p-4 xl:sticky xl:top-24">
               <div className="mb-6">
                 <p className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">Production Admin</p>
                 <h1 className="mt-2 text-2xl font-black text-slate-950 dark:text-white">Lead Management</h1>
@@ -355,13 +372,25 @@ function Admin() {
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+              <div className="mt-6 space-y-3">
+                <button className="btn-secondary w-full justify-between" type="button" onClick={handleThemeToggle} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>
+                  <span className="flex items-center gap-2">
+                    {theme === "dark" ? <FiSun /> : <FiMoon />}
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </span>
+                  <span className="rounded-full bg-slate-950/5 px-2 py-1 text-xs font-black uppercase tracking-wide text-slate-500 dark:bg-white/10 dark:text-slate-300">
+                    {theme}
+                  </span>
+                </button>
+
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
                 <button className="btn-secondary w-full" type="button" onClick={() => loadOverview(token)}>
                   Refresh <FiRefreshCw />
                 </button>
                 <button className="btn-secondary w-full" type="button" onClick={handleLogout}>
                   Logout <FiX />
                 </button>
+                </div>
               </div>
             </aside>
 
