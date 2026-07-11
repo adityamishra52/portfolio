@@ -30,14 +30,15 @@ function Projects() {
   return (
     <>
       <SEO
-        title="Projects"
+        title="Aditaya Projects"
         path="/projects"
         description="Featured projects by Aditaya Kumar Mishra including BoostPilot AI, OptiResume, Portfolio Builder, Care Contribution, CharityVibe, and Stock Market Prediction ML."
+        keywords={["Aditaya projects", "Aditaya portfolio projects", "Aditaya Kumar Mishra projects", "Aditaya MERN projects", "Aditaya AI projects"]}
       />
       <section className="page-section">
         <div className="section-heading">
           <span className="eyebrow">Featured Projects</span>
-          <h1 className="page-title">Six production-style builds with clean UX and real impact</h1>
+          <h1 className="page-title">Aditaya Kumar Mishra projects: six production-style builds with clean UX and real impact</h1>
           <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             Each project demonstrates full-stack capabilities: responsive design, backend APIs, database integration, and deployment. Production-ready code with recruiter-friendly architecture.
           </p>

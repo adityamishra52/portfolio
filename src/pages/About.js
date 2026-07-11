@@ -47,9 +47,10 @@ function About() {
   return (
     <>
       <SEO
-        title="About"
+        title="About Aditaya Kumar Mishra"
         path="/about"
-        description="About Aditaya Kumar Mishra, Full Stack MERN Developer focused on React, Vite, Node.js, MongoDB, AI web apps, SEO, and modern product delivery."
+        description="About Aditaya Kumar Mishra, also known as Aditaya and Aditya Mishra. Full Stack MERN Developer focused on React, Vite, Node.js, MongoDB, AI web apps, SEO, testing, and modern product delivery."
+        keywords={["About Aditaya", "Aditaya Mishra about", "Aditya Mishra about", "Aditaya Kumar Mishra bio", "Aditaya developer profile"]}
       />
       <section className="page-section">
         <motion.div
@@ -61,7 +62,7 @@ function About() {
           <div className="space-y-6">
             <div className="space-y-5">
               <span className="eyebrow">About Me</span>
-              <h1 className="page-title">Full-stack developer with product discipline, SEO depth, and delivery focus.</h1>
+              <h1 className="page-title">About Aditaya Kumar Mishra, full-stack developer with product discipline and SEO depth.</h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
                 I build polished digital experiences that feel credible to recruiters, useful to teams, and trustworthy to clients. My work sits at the intersection of full-stack delivery, technical SEO, testing, and practical product thinking.
               </p>

@@ -3,3 +3,4 @@ Preferred-Languages: en, hi
 Canonical: https://aditaya-portfolio.vercel.app/security.txt
 Policy: https://aditaya-portfolio.vercel.app/contact
 Expires: 2027-06-07T00:00:00+05:30
+Acknowledgments: https://aditaya-portfolio.vercel.app/

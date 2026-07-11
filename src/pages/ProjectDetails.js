@@ -125,10 +125,19 @@ function ProjectDetails() {
   return (
     <>
       <SEO
-        title={project.title}
+        title={`${project.title} by Aditaya`}
         path={`/projects/${project.slug}`}
-        description={project.description}
-        keywords={[project.title, project.category, ...project.tech]}
+        description={`${project.title} case study by Aditaya Kumar Mishra. ${project.description}`}
+        keywords={[
+          `${project.title} Aditaya`,
+          `${project.title} Aditaya Kumar Mishra`,
+          `Aditaya ${project.category}`,
+          "Aditaya project",
+          "Aditaya portfolio project",
+          project.title,
+          project.category,
+          ...project.tech,
+        ]}
         image={previewImage}
         imageAlt={project.previewAlt || `${project.title} project preview`}
         jsonLd={jsonLd}

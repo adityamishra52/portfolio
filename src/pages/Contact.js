@@ -185,16 +185,17 @@ function Contact() {
   return (
     <>
       <SEO
-        title="Contact"
+        title="Contact Aditaya"
         path="/contact"
-        description="Send a message, collaboration idea, feedback, or question to Aditaya Kumar Mishra."
+        description="Contact Aditaya Kumar Mishra, also known as Aditaya Mishra and adityamishra52, for messages, collaboration ideas, portfolio questions, web development, SEO, and project discussions."
+        keywords={["Contact Aditaya", "Aditaya contact", "Aditaya Kumar Mishra contact", "Aditaya email", "adityamishra52 contact"]}
       />
       <section className="page-section">
         <div className="grid gap-8 2xl:grid-cols-[0.96fr_1.04fr]">
           <motion.div className="space-y-8" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
             <div className="space-y-5">
               <span className="eyebrow">Contact</span>
-              <h1 className="page-title">Send a message, collaboration idea, feedback, or question.</h1>
+              <h1 className="page-title">Contact Aditaya Kumar Mishra for messages, collaboration, feedback, or questions.</h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
                 This page is for general communication. Ask something, share feedback, start a conversation, or reach out
                 about collaboration without needing a full project brief.

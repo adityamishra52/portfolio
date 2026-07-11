@@ -26,14 +26,15 @@ function Education() {
   return (
     <>
       <SEO
-        title="Education"
+        title="Aditaya Education"
         path="/education"
         description="Education details for Aditaya Kumar Mishra, Computer Science and Engineering graduate with hands-on MERN, AI, SEO, and web development project experience."
+        keywords={["Aditaya education", "Aditaya Kumar Mishra education", "Aditaya computer science", "Aditaya CSE", "Aditaya academic profile"]}
       />
       <section className="page-section">
         <div className="section-heading">
           <span className="eyebrow">Education</span>
-          <h1 className="page-title">Computer science foundation with hands-on product depth</h1>
+          <h1 className="page-title">Aditaya Kumar Mishra education: computer science foundation with hands-on product depth</h1>
           <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             Structured education combined with real-world development experience, building production applications alongside formal studies.
           </p>

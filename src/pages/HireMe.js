@@ -181,9 +181,10 @@ function HireMe() {
   return (
     <>
       <SEO
-        title="Hire Me"
+        title="Hire Aditaya"
         path="/hire-me"
-        description="Hire Aditaya Kumar Mishra to build fast, modern, SEO-ready web apps, dashboards, and premium business websites."
+        description="Hire Aditaya Kumar Mishra, Full Stack MERN Developer, to build fast, modern, SEO-ready web apps, dashboards, portfolio websites, AI tools, and premium business websites."
+        keywords={["Hire Aditaya", "Hire Aditaya Kumar Mishra", "Aditaya freelance developer", "Aditaya MERN developer hire", "Aditaya web developer hire"]}
       />
       <section className="page-section">
         <motion.div
@@ -196,7 +197,7 @@ function HireMe() {
             <div className="space-y-7">
               <div className="space-y-5">
                 <span className="eyebrow">Hire Me</span>
-                <h1 className="page-title">Hire me to build fast, modern, SEO-ready web apps.</h1>
+                <h1 className="page-title">Hire Aditaya Kumar Mishra to build fast, modern, SEO-ready web apps.</h1>
                 <p className="max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
                   This page is for professional work, freelance projects, internships, job roles, client inquiries, and
                   product requests that need a serious scope, timeline, and budget discussion.

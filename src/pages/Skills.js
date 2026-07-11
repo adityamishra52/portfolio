@@ -55,16 +55,17 @@ function Skills() {
   return (
     <>
       <SEO
-        title="Skills"
+        title="Aditaya Skills"
         path="/skills"
-        description="Skills of Aditaya Kumar Mishra across React, Vite, Tailwind CSS, Node.js, Express, MongoDB, SEO, deployment, and AI web app development."
+        description="Skills of Aditaya Kumar Mishra across React, Vite, Tailwind CSS, Node.js, Express, MongoDB, SEO, deployment, AI web app development, testing, and MERN projects."
+        keywords={["Aditaya skills", "Aditaya developer skills", "Aditaya React skills", "Aditaya MERN skills", "Aditaya SEO skills"]}
       />
 
       <section className="page-section">
         {/* Header */}
         <div className="section-heading">
           <span className="eyebrow">Expertise</span>
-          <h1 className="page-title">A comprehensive modern full-stack toolkit for premium product delivery</h1>
+          <h1 className="page-title">Aditaya Kumar Mishra skills: modern full-stack toolkit for premium product delivery</h1>
           <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             I craft production-ready applications with clean architecture, responsive design, and strong engineering practices. Every skill is backed by real project experience.
           </p>

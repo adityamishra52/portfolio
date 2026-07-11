@@ -3,95 +3,119 @@
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://aditaya-portfolio.vercel.app/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://aditaya-portfolio.vercel.app/og-image.png</image:loc>
-      <image:title>Aditaya Kumar Mishra Full Stack Developer Portfolio</image:title>
+      <image:title>Aditaya Kumar Mishra Portfolio - Aditaya Full Stack MERN Developer</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/about</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.92</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/skills</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/projects</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <priority>0.96</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/projects/boostpilot-ai</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.86</priority>
     <image:image>
       <image:loc>https://aditaya-portfolio.vercel.app/projects/boostpilot-ai-dashboard.png</image:loc>
-      <image:title>BoostPilot AI dashboard preview</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://aditaya-portfolio.vercel.app/projects/support-kindness</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-    <image:image>
-      <image:loc>https://aditaya-portfolio.vercel.app/projects/support-kindness-homepage.png</image:loc>
-      <image:title>Support Kindness Care Contribution project preview</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://aditaya-portfolio.vercel.app/projects/charityvibe</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-    <image:image>
-      <image:loc>https://aditaya-portfolio.vercel.app/projects/charityvibe-donation-page.png</image:loc>
-      <image:title>CharityVibe donation platform preview</image:title>
+      <image:title>BoostPilot AI by Aditaya Kumar Mishra</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/projects/optiresume</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://aditaya-portfolio.vercel.app/projects/portfolio-builder</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/portfolio-builder-home.png</image:loc>
+      <image:title>Portfolio Builder by Aditaya Kumar Mishra</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/portfolio-builder-template.png</image:loc>
+      <image:title>Portfolio Builder template selection screenshot</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/portfolio-builder-dashboard.png</image:loc>
+      <image:title>Portfolio Builder dashboard screenshot</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://aditaya-portfolio.vercel.app/projects/support-kindness</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/support-kindness-homepage.png</image:loc>
+      <image:title>Support Kindness Care Contribution by Aditaya Kumar Mishra</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://aditaya-portfolio.vercel.app/projects/charityvibe</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/charityvibe-donation-page.png</image:loc>
+      <image:title>CharityVibe by Aditaya Kumar Mishra</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/projects/stock-market-prediction-ml</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://aditaya-portfolio.vercel.app/gallery</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/experience</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.86</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/education</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/contact</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/hire-me</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>

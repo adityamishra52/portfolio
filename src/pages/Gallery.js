@@ -17,14 +17,15 @@ export default function Gallery() {
   return (
     <>
       <SEO
-        title="Project Gallery"
+        title="Aditaya Project Gallery"
         path="/gallery"
-        description="Project screenshots and previews from Aditaya Kumar Mishra's full stack developer portfolio."
+        description="Aditaya Kumar Mishra project gallery with screenshots and previews from full stack MERN, AI, portfolio builder, donation, dashboard, and machine learning projects."
+        keywords={["Aditaya gallery", "Aditaya project screenshots", "Aditaya portfolio gallery", "Aditaya Kumar Mishra gallery", "adityamishra52 gallery"]}
       />
       <section className="page-section">
         <div className="section-heading">
           <span className="eyebrow">Project Gallery</span>
-          <h1 className="page-title">All project screenshots and previews</h1>
+          <h1 className="page-title">Aditaya Kumar Mishra project gallery with screenshots and previews</h1>
         </div>
 
         <div className="mb-6 flex items-center gap-4">

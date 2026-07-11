@@ -26,14 +26,15 @@ function Experience() {
   return (
     <>
       <SEO
-        title="Experience"
+        title="Aditaya Experience"
         path="/experience"
         description="Work experience of Aditaya Kumar Mishra including Manuscript Technomedia LLP, website testing, SEO, React, Vite, Node.js, MongoDB, Vercel, and Render."
+        keywords={["Aditaya experience", "Aditaya work experience", "Aditaya Kumar Mishra experience", "Aditaya SEO executive", "Aditaya web developer experience"]}
       />
       <section className="page-section">
         <div className="section-heading">
           <span className="eyebrow">Work Experience</span>
-          <h1 className="page-title">Real-world development, testing, SEO, and deployment work</h1>
+          <h1 className="page-title">Aditaya Kumar Mishra experience in development, testing, SEO, and deployment work</h1>
           <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
             Hands-on experience building production web applications, testing complex systems, optimizing for search engines, and managing cloud deployments.
           </p>

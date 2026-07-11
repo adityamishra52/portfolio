@@ -14,9 +14,17 @@ function Home() {
   return (
     <>
       <SEO
-        title="Premium Full Stack MERN Developer Portfolio"
+        title="Aditaya Kumar Mishra Portfolio"
         path="/"
-        description="Premium animated portfolio of Aditaya Kumar Mishra, Full Stack MERN Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, and modern web products."
+        description="Aditaya Kumar Mishra portfolio, also searchable as Aditaya, Aditya, Aditaya Mishra, and adityamishra52. Full Stack MERN Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, and modern web products."
+        keywords={[
+          "Aditaya",
+          "Aditya",
+          "Aditaya portfolio",
+          "Aditaya Kumar Mishra portfolio",
+          "Aditaya full stack developer",
+          "adityamishra52 portfolio",
+        ]}
       />
 
       <div className="text-slate-950 dark:text-white">

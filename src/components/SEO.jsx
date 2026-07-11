@@ -3,7 +3,9 @@ import { useLocation } from "react-router-dom";
 import { profile, seoKeywords, siteUrl } from "../data/portfolio";
 
 const defaultDescription =
-  "Premium portfolio of Aditaya Kumar Mishra, Full Stack Developer and MERN Stack Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, dashboards, and testing-focused web products.";
+  "Aditaya Kumar Mishra portfolio, also searchable as Aditaya, Aditya, Aditaya Mishra, and adityamishra52. Full Stack MERN Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, dashboards, and testing-focused products.";
+
+const aliasText = profile.aliases.join(", ");
 
 const ensureMeta = (selector, attribute, value) => {
   if (!value) return;
@@ -109,20 +111,31 @@ function SEO({
           url,
           name: fullTitle,
           headline: fullTitle,
+          alternateName: [
+            `${profile.name} Portfolio`,
+            "Aditaya Portfolio",
+            "Aditya Portfolio",
+            "Aditaya Mishra Portfolio",
+            "adityamishra52 portfolio",
+          ],
           description,
           isPartOf: { "@id": `${siteUrl}/#website` },
           about: { "@id": `${siteUrl}/#person` },
+          author: { "@id": `${siteUrl}/#person` },
+          creator: { "@id": `${siteUrl}/#person` },
           primaryImageOfPage: {
             "@type": "ImageObject",
             url: imageUrl,
           },
           breadcrumb: { "@id": `${url}#breadcrumb` },
+          keywords: keywordText,
+          inLanguage: "en-IN",
         },
         buildBreadcrumb(currentPath),
         ...extraGraph,
       ],
     };
-  }, [currentPath, description, fullTitle, imageUrl, jsonLd, url]);
+  }, [currentPath, description, fullTitle, imageUrl, jsonLd, keywordText, url]);
 
   useEffect(() => {
     document.title = fullTitle;
@@ -133,6 +146,15 @@ function SEO({
     ensureMeta('meta[name="author"]', "content", profile.name);
     ensureMeta('meta[name="creator"]', "content", profile.name);
     ensureMeta('meta[name="publisher"]', "content", profile.name);
+    ensureMeta('meta[name="owner"]', "content", profile.name);
+    ensureMeta('meta[name="designer"]', "content", profile.name);
+    ensureMeta('meta[name="developer"]', "content", profile.name);
+    ensureMeta('meta[name="contact"]', "content", profile.email);
+    ensureMeta('meta[name="profile:first_name"]', "content", "Aditaya");
+    ensureMeta('meta[name="profile:last_name"]', "content", "Mishra");
+    ensureMeta('meta[name="alternate-name"]', "content", aliasText);
+    ensureMeta('meta[name="subject"]', "content", `${profile.name} Full Stack Developer Portfolio`);
+    ensureMeta('meta[name="classification"]', "content", "Portfolio, Full Stack Developer, MERN Developer, React Developer, SEO, Website Testing");
     ensureMeta('meta[name="robots"]', "content", robots);
     ensureMeta('meta[name="googlebot"]', "content", robots);
     ensureMeta('meta[name="bingbot"]', "content", robots);
@@ -155,6 +177,9 @@ function SEO({
     ensureMeta('meta[property="og:image:height"]', "content", "630");
     ensureMeta('meta[property="og:image:alt"]', "content", imageAlt);
     ensureMeta('meta[property="article:author"]', "content", profile.linkedin);
+    ensureMeta('meta[property="profile:first_name"]', "content", "Aditaya");
+    ensureMeta('meta[property="profile:last_name"]', "content", "Mishra");
+    ensureMeta('meta[property="profile:username"]', "content", "adityamishra52");
 
     ensureMeta('meta[name="twitter:card"]', "content", "summary_large_image");
     ensureMeta('meta[name="twitter:title"]', "content", fullTitle);
