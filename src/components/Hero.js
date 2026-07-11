@@ -1,66 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowUpRight, FiDownload, FiMail } from "react-icons/fi";
 import { profile } from "../data/portfolio";
+import ResumeModal from "./ResumeModal";
 
 function Hero() {
+  const [resumeOpen, setResumeOpen] = useState(false);
+
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <motion.section
-      id="top"
-      className="hero section-shell"
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
-    >
-      <div className="hero-content">
-        <div className="hero-copy">
-          <span className="eyebrow">Available for MERN, AI web app, and SEO-focused product work</span>
-          <h1>{profile.name}</h1>
-          <p className="hero-role">{profile.role}</p>
-          <p className="hero-desc">{profile.intro}</p>
+    <>
+      <motion.section
+        id="top"
+        className="hero section-shell"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <div className="hero-content">
+          <div className="hero-copy">
+            <span className="eyebrow">Available for MERN, AI web app, and SEO-focused product work</span>
+            <h1>{profile.name}</h1>
+            <p className="hero-role">{profile.role}</p>
+            <p className="hero-desc">{profile.intro}</p>
 
-          <div className="hero-actions">
-            <button className="btn primary" type="button" onClick={() => scrollToSection("projects")}>
-              View Projects <FiArrowUpRight />
-            </button>
-            <a className="btn secondary" href={profile.resume} target="_blank" rel="noreferrer">
-              Resume <FiDownload />
-            </a>
-            <a className="btn ghost" href={`mailto:${profile.email}`}>
-              Contact <FiMail />
-            </a>
+            <div className="hero-actions">
+              <button className="btn primary" type="button" onClick={() => scrollToSection("projects")}>
+                View Projects <FiArrowUpRight />
+              </button>
+              <button className="btn secondary" type="button" onClick={() => setResumeOpen(true)}>
+                CV <FiDownload />
+              </button>
+              <a className="btn ghost" href={`mailto:${profile.email}`}>
+                Contact <FiMail />
+              </a>
+            </div>
+
+            <div className="hero-stats" aria-label="Portfolio highlights">
+              <span>
+                <strong>2+</strong>
+                Live MERN products
+              </span>
+              <span>
+                <strong>AI</strong>
+                Creator tools
+              </span>
+              <span>
+                <strong>SEO</strong>
+                Recruiter-ready site
+              </span>
+            </div>
           </div>
 
-          <div className="hero-stats" aria-label="Portfolio highlights">
-            <span>
-              <strong>2+</strong>
-              Live MERN products
-            </span>
-            <span>
-              <strong>AI</strong>
-              Creator tools
-            </span>
-            <span>
-              <strong>SEO</strong>
-              Recruiter-ready site
-            </span>
+          <div className="hero-visual" aria-label="Profile card">
+            <div className="availability-pill">Open to work</div>
+            <img src="/Aditaya.png" alt="Aditaya Kumar Mishra" className="profile-img" loading="eager" decoding="async" fetchPriority="high" />
+            <div className="hero-card">
+              <span>Core stack</span>
+              <strong>React, Node.js, MongoDB, AI APIs</strong>
+            </div>
           </div>
         </div>
-
-        <div className="hero-visual" aria-label="Profile card">
-          <div className="availability-pill">Open to work</div>
-          <img src="/Aditaya.png" alt="Aditaya Kumar Mishra" className="profile-img" loading="eager" decoding="async" fetchPriority="high" />
-          <div className="hero-card">
-            <span>Core stack</span>
-            <strong>React, Node.js, MongoDB, AI APIs</strong>
-          </div>
-        </div>
-      </div>
-    </motion.section>
+      </motion.section>
+      <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
+    </>
   );
 }
 

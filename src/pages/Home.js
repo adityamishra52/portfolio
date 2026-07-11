@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiCheckCircle, FiDownload, FiExternalLink, FiMail, FiShield, FiTrendingUp, FiZap } from "react-icons/fi";
 import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
+import ResumeModal from "../components/ResumeModal";
 import { deliveryHighlights, portfolioProof, profile, skills, techMarquee } from "../data/portfolio";
 import { projects } from "../data/projects";
 import useImagePreload from "../utils/useImagePreload";
 import { trackEvent } from "../lib/analytics";
 
 function Home() {
+  const [resumeOpen, setResumeOpen] = useState(false);
   useImagePreload(projects.slice(0, 3).map((project) => project.preview).filter(Boolean));
 
   return (
@@ -67,23 +70,26 @@ function Home() {
                   </Link>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     {/* Resume analytics are tracked here for preview and explicit download actions. */}
-                    <a
+                    <button
                       className="btn-secondary"
-                      href={profile.resume}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => trackEvent("Resume", "Resume Preview", "Home Hero")}
+                      type="button"
+                      onClick={() => {
+                        setResumeOpen(true);
+                        trackEvent("Resume", "CV Popup Open", "Home Hero Preview");
+                      }}
                     >
-                      Preview Resume <FiDownload />
-                    </a>
-                    <a
+                      View CV <FiDownload />
+                    </button>
+                    <button
                       className="btn-secondary"
-                      href={profile.resume}
-                      download
-                      onClick={() => trackEvent("Resume", "Resume Download", "Home Hero")}
+                      type="button"
+                      onClick={() => {
+                        setResumeOpen(true);
+                        trackEvent("Resume", "CV Popup Open", "Home Hero Download");
+                      }}
                     >
-                      Download PDF <FiDownload />
-                    </a>
+                      Download CV <FiDownload />
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -299,6 +305,7 @@ function Home() {
           </div>
         </section>
       </div>
+      <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
     </>
   );
 }
