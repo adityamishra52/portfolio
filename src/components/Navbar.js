@@ -18,9 +18,13 @@ function Navbar({ theme, onThemeToggle }) {
     <header className="sticky top-3 z-50 mx-auto w-[min(1220px,calc(100%-20px))] sm:top-4 sm:w-[min(1220px,calc(100%-24px))]">
       <nav className="glass-panel flex items-center justify-between gap-3 px-3 py-3">
         <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => { setOpen(false); trackEvent("Navigation", "Menu Click", "Brand Home"); }}>
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-rose-500 font-black text-white shadow-glow">
-            A
-          </span>
+          <img
+            src="/logo.png"
+            alt="Aditaya Kumar Mishra logo"
+            className="h-12 w-12 shrink-0 rounded-2xl object-cover shadow-glow"
+            width="48"
+            height="48"
+          />
           <span className="min-w-0">
             <span className="block truncate text-sm font-black text-slate-950 dark:text-white sm:text-base">
               {profile.name}

@@ -44,9 +44,13 @@ function Footer() {
           {/* Brand section */}
           <motion.div variants={itemVariants}>
             <div className="mb-6 flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 via-cyan-500 to-rose-500 font-black text-white shadow-lg">
-                A
-              </div>
+              <img
+                src="/logo.png"
+                alt="Aditaya Kumar Mishra logo"
+                className="h-14 w-14 rounded-2xl object-cover shadow-lg"
+                width="56"
+                height="56"
+              />
               <div>
                 <strong className="block text-lg font-bold text-slate-950 dark:text-white">{profile.name}</strong>
                 <span className="text-xs font-semibold uppercase tracking-wide text-teal-700 dark:text-teal-300">{profile.role}</span>
