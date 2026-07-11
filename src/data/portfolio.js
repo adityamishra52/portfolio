@@ -18,7 +18,7 @@ export const profile = {
 
 export const professionalProfile = {
   availability: "Open to Full-Time, Internship, Freelance & Contract Opportunities",
-  workMode: "Remote • Hybrid • On-Site",
+  workMode: "Remote, Hybrid, On-Site",
   currentRole: "Website Testing & SEO Executive",
   company: "Manuscript Technomedia LLP",
   duration: "April 2026 - Present",
@@ -30,7 +30,7 @@ export const professionalProfile = {
     "Performance Optimization",
   ],
   counters: [
-    { value: 5, suffix: "+", label: "Production-style projects" },
+    { value: 6, suffix: "+", label: "Production-style projects" },
     { value: 4, suffix: "", label: "Work modes supported" },
     { value: 24, suffix: "/7", label: "Learning and iteration mindset" },
   ],
@@ -58,6 +58,60 @@ export const professionalProfile = {
     },
   ],
 };
+
+export const portfolioProof = [
+  {
+    title: "Live Product Delivery",
+    summary:
+      "Built and deployed full-stack products across AI tools, SaaS dashboards, donation platforms, and community systems.",
+    points: ["React/Vite frontends", "Node and MongoDB workflows", "Vercel and Render deployments"],
+  },
+  {
+    title: "Recruiter-Friendly Case Studies",
+    summary:
+      "Projects are written with clear problem, solution, stack, screenshots, and outcomes so reviewers can understand the value quickly.",
+    points: ["Detailed project pages", "Visual galleries", "Clear technology grouping"],
+  },
+  {
+    title: "SEO and Testing Mindset",
+    summary:
+      "Experience in technical SEO, web testing, metadata quality, route checks, and release-readiness helps projects feel more production-ready.",
+    points: ["Meta and sitemap work", "Cross-browser checking", "Console and routing fixes"],
+  },
+];
+
+export const deliveryHighlights = [
+  {
+    title: "Discovery to Launch",
+    description: "I shape requirements, build the interface, connect backend workflows, test edge cases, and prepare projects for deployment.",
+    tags: ["Planning", "Frontend", "Backend", "Deploy"],
+  },
+  {
+    title: "Clean Product UX",
+    description: "Layouts are designed for scanning, trust, and conversion with responsive cards, clear CTAs, and readable case-study flow.",
+    tags: ["Responsive UI", "Dashboards", "Case Studies", "CTAs"],
+  },
+  {
+    title: "Quality and SEO",
+    description: "I care about metadata, routing, console errors, mobile fit, cross-browser behavior, and the details that make a site feel finished.",
+    tags: ["SEO", "Testing", "Performance", "Polish"],
+  },
+];
+
+export const techMarquee = [
+  "React",
+  "Vite",
+  "Node.js",
+  "Express",
+  "MongoDB",
+  "Tailwind CSS",
+  "TypeScript",
+  "AI APIs",
+  "JWT",
+  "Vercel",
+  "Render",
+  "SEO",
+];
 
 export const navItems = [
   { label: "Home", to: "/" },
@@ -190,6 +244,7 @@ export const seoKeywords = [
   "Care Contribution",
   "CharityVibe",
   "OptiResume",
+  "Portfolio Builder",
   "Stock Market Prediction ML",
   "Vercel Developer",
   "SEO Executive",

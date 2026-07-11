@@ -15,7 +15,7 @@ function Navbar({ theme, onThemeToggle }) {
     }`;
 
   return (
-    <header className="sticky top-4 z-50 mx-auto w-[min(1220px,calc(100%-24px))]">
+    <header className="sticky top-3 z-50 mx-auto w-[min(1220px,calc(100%-20px))] sm:top-4 sm:w-[min(1220px,calc(100%-24px))]">
       <nav className="glass-panel flex items-center justify-between gap-3 px-3 py-3">
         <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => { setOpen(false); trackEvent("Navigation", "Menu Click", "Brand Home"); }}>
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-rose-500 font-black text-white shadow-glow">
@@ -64,7 +64,7 @@ function Navbar({ theme, onThemeToggle }) {
       </nav>
 
       {open && (
-        <div className="glass-panel mt-2 grid gap-2 p-3 lg:hidden">
+        <div className="glass-panel mt-2 grid max-h-[calc(100vh-110px)] gap-2 overflow-y-auto p-3 lg:hidden">
           {navItems.map((item) => (
             <NavLink key={item.to} to={item.to} className={linkClass} onClick={() => { setOpen(false); trackEvent("Navigation", "Mobile Menu Click", item.label); }}>
               {item.label}

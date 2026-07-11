@@ -125,9 +125,56 @@
     @apply min-w-0 rounded-3xl border border-slate-200/80 bg-white/75 text-slate-700 shadow-soft backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-teal-400/50 dark:border-white/10 dark:bg-slate-950/50 dark:text-slate-200;
   }
 
+  .feature-card {
+    @apply min-w-0 rounded-[2rem] border border-slate-200/80 bg-white/75 text-slate-700 shadow-soft backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-teal-400/50 dark:border-white/10 dark:bg-slate-950/50 dark:text-slate-200;
+  }
+
+  .feature-index {
+    @apply inline-grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-sm font-black text-white shadow-soft dark:bg-white dark:text-slate-950;
+  }
+
+  .hero-signal {
+    @apply flex min-w-0 items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/75 p-3 text-sm font-semibold text-slate-600 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/10 dark:text-slate-300;
+  }
+
+  .hero-signal svg {
+    @apply h-5 w-5 shrink-0 text-teal-600 dark:text-teal-300;
+  }
+
+  .hero-signal strong {
+    @apply block text-xs font-black uppercase tracking-wide text-slate-950 dark:text-white;
+  }
+
+  .tech-marquee {
+    @apply relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/65 py-3 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/10;
+  }
+
+  .tech-marquee::before,
+  .tech-marquee::after {
+    content: "";
+    @apply pointer-events-none absolute top-0 z-10 h-full w-16;
+  }
+
+  .tech-marquee::before {
+    @apply left-0 bg-gradient-to-r from-slate-50 to-transparent dark:from-[#070a12];
+  }
+
+  .tech-marquee::after {
+    @apply right-0 bg-gradient-to-l from-slate-50 to-transparent dark:from-[#070a12];
+  }
+
+  .tech-marquee-track {
+    @apply flex w-max gap-3;
+    animation: marquee-scroll 34s linear infinite;
+  }
+
+  .tech-marquee-track span {
+    @apply inline-flex min-h-9 items-center rounded-full border border-slate-200/80 bg-slate-100/80 px-4 text-xs font-black uppercase tracking-wide text-slate-600 dark:border-white/10 dark:bg-white/10 dark:text-slate-300;
+  }
+
   /* Page layout */
   .page-section {
-    @apply mx-auto w-[min(1220px,calc(100%-24px))] min-w-0 py-16 sm:py-20 lg:py-24;
+    @apply mx-auto w-[min(1220px,calc(100%-24px))] min-w-0 py-14 sm:py-20 lg:py-24;
   }
 
   .section-heading {
@@ -295,6 +342,50 @@
   }
 }
 
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .page-title {
+    @apply text-4xl;
+  }
+
+  .fluid-title {
+    font-size: clamp(2.35rem, 17vw, 4rem);
+    line-height: 1.02;
+  }
+
+  .hero-profile {
+    @apply min-h-[390px] p-5;
+  }
+
+  .hero-profile img {
+    @apply w-[min(74%,270px)];
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    @apply w-full px-5;
+  }
+
+  .glass-panel,
+  .glass-card,
+  .feature-card {
+    @apply rounded-[1.5rem];
+  }
+
+  .tech-marquee-track {
+    animation-duration: 24s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -303,5 +394,9 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .tech-marquee-track {
+    animation: none !important;
   }
 }

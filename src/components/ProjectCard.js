@@ -65,49 +65,23 @@ function ProjectCard({ project, featured = false }) {
             Details <FiArrowUpRight />
           </Link>
           {hasExternalDemo ? (
-            <>
-              <a
-                className="btn-secondary w-full"
-                href={externalUrl}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => trackEvent("Projects", "Live Demo Click", project.slug)}
-              >
-                Live Demo <FiArrowUpRight />
-              </a>
-              <a
-                className="btn-secondary w-full"
-                href={externalUrl}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => trackEvent("Projects", "Visit Website Click", project.slug)}
-              >
-                Visit Website <FiArrowUpRight />
-              </a>
-            </>
-          ) : (
-            <button className="btn-secondary w-full opacity-70" type="button" disabled>
-              Case Study
-            </button>
-          )}
-          <Link className="btn-secondary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:tech-stack`)}>
-            Tech Stack <FiLayers />
-          </Link>
-          {hasExternalDemo ? (
             <a
               className="btn-secondary w-full"
               href={externalUrl}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackEvent("Projects", "Open In New Tab Click", project.slug)}
+              onClick={() => trackEvent("Projects", "Live Demo Click", project.slug)}
             >
-              Open in New Tab <FiArrowUpRight />
+              Live Demo <FiArrowUpRight />
             </a>
           ) : (
-            <Link className="btn-secondary w-full" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", project.slug)}>
-              View Case Study <FiArrowUpRight />
-            </Link>
+            <button className="btn-secondary w-full opacity-70" type="button" disabled>
+              Case Study
+            </button>
           )}
+          <Link className="btn-secondary w-full sm:col-span-2" to={`/projects/${project.slug}`} onClick={() => trackEvent("Projects", "Project Card Click", `${project.slug}:tech-stack`)}>
+            Tech Stack <FiLayers />
+          </Link>
         </div>
       </div>
     </motion.article>
