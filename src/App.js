@@ -39,7 +39,7 @@ function AppShell({ theme, onThemeToggle }) {
   }, [location.pathname, location.search]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen">
       <div className="fixed inset-0 -z-10 bg-page" />
       <ScrollToTop />
       {!isAdmin && <Navbar theme={theme} onThemeToggle={onThemeToggle} />}
