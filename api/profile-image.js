@@ -3,7 +3,7 @@ const { enforceRateLimit } = require("./_lib/rateLimit");
 
 const redirectToDefault = (res) => {
   res.status(302).setHeader("Location", "/Aditaya.png");
-  res.setHeader("Cache-Control", "public, max-age=300");
+  res.setHeader("Cache-Control", "no-store");
   res.end();
 };
 
@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     const buffer = Buffer.from(doc.data, "base64");
     res.status(200);
     res.setHeader("Content-Type", doc.contentType || "image/jpeg");
-    res.setHeader("Cache-Control", "public, max-age=300, must-revalidate");
+    res.setHeader("Cache-Control", "no-store");
     return res.end(buffer);
   } catch (error) {
     return redirectToDefault(res);
