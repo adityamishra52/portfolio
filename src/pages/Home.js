@@ -18,6 +18,7 @@ function Home() {
     <>
       <SEO
         title="Aditaya Kumar Mishra Portfolio"
+        fullTitle="Aditaya Kumar Mishra Portfolio | Aditaya Full Stack MERN Developer"
         path="/"
         description="Aditaya Kumar Mishra portfolio, also searchable as Aditaya, Aditya, Aditaya Mishra, and adityamishra52. Full Stack MERN Developer building React, Vite, Node.js, MongoDB, AI web apps, SEO-ready websites, and modern web products."
         keywords={[

@@ -79,6 +79,7 @@ const schemaTypeForPath = (path) => {
 
 function SEO({
   title,
+  fullTitle: fullTitleOverride,
   description = defaultDescription,
   keywords,
   canonical,
@@ -91,7 +92,7 @@ function SEO({
 }) {
   const location = useLocation();
   const currentPath = normalizePath(path || location.pathname || "/");
-  const fullTitle = title ? `${title} | ${profile.name}` : `${profile.name} | Full Stack Developer`;
+  const fullTitle = fullTitleOverride || (title ? `${title} | ${profile.name}` : `${profile.name} | Full Stack Developer`);
   const url = canonical || absoluteUrl(currentPath);
   const imageUrl = absoluteUrl(image);
   const keywordText = useMemo(() => {
