@@ -147,6 +147,24 @@ export const exportAdminMessages = async (token, params, format = "csv") => {
   return response.blob();
 };
 
+export const getAdminProfileImage = async (token) =>
+  requestJson("/api/admin/profile-image", {
+    headers: buildAdminHeaders(token, false),
+  });
+
+export const updateAdminProfileImage = async (token, imageDataUrl) =>
+  requestJson("/api/admin/profile-image", {
+    method: "POST",
+    headers: buildAdminHeaders(token),
+    body: JSON.stringify({ image: imageDataUrl }),
+  });
+
+export const resetAdminProfileImage = async (token) =>
+  requestJson("/api/admin/profile-image", {
+    method: "DELETE",
+    headers: buildAdminHeaders(token, false),
+  });
+
 export const saveAdminSession = (session) => {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));

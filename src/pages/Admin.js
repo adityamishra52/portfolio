@@ -38,10 +38,13 @@ import {
   exportAdminMessages,
   getAdminMessages,
   getAdminOverview,
+  getAdminProfileImage,
   getAdminSession,
   loginAdmin,
+  resetAdminProfileImage,
   saveAdminSession,
   updateAdminMessage,
+  updateAdminProfileImage,
 } from "../utils/storage";
 
 const tabs = [
@@ -652,6 +655,7 @@ function Admin() {
                     <span className="eyebrow">Settings</span>
                     <h2 className="page-title">Environment and deployment notes</h2>
                   </div>
+                  <ProfileImageManager token={token} />
                   <div className="grid gap-4 lg:grid-cols-2">
                     {[
                       "Use JWT_SECRET to sign admin sessions. ADMIN_KEY can be set separately for the admin secret.",
@@ -743,6 +747,158 @@ function Admin() {
         )}
       </section>
     </>
+  );
+}
+
+const MAX_PROFILE_IMAGE_DIMENSION = 800;
+
+const resizeImageFile = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read the selected file."));
+    reader.onload = () => {
+      const image = new window.Image();
+      image.onerror = () => reject(new Error("That file doesn't look like a valid image."));
+      image.onload = () => {
+        const scale = Math.min(1, MAX_PROFILE_IMAGE_DIMENSION / Math.max(image.width, image.height));
+        const width = Math.round(image.width * scale);
+        const height = Math.round(image.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+function ProfileImageManager({ token }) {
+  const [status, setStatus] = useState(null);
+  const [preview, setPreview] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [cacheBust, setCacheBust] = useState(() => Date.now());
+
+  const loadStatus = async () => {
+    try {
+      const result = await getAdminProfileImage(token);
+      setStatus(result);
+    } catch (loadError) {
+      setError(loadError.message || "Could not load profile photo status.");
+    }
+  };
+
+  useEffect(() => {
+    if (token) loadStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setMessage("");
+    setError("");
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+
+    try {
+      const dataUrl = await resizeImageFile(file);
+      setPreview(dataUrl);
+    } catch (resizeError) {
+      setError(resizeError.message || "Could not process that image.");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!preview) return;
+    setIsSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await updateAdminProfileImage(token, preview);
+      setMessage("Profile photo updated. It's now live on Home and About.");
+      setPreview("");
+      setCacheBust(Date.now());
+      await loadStatus();
+    } catch (saveError) {
+      setError(saveError.message || "Could not update profile photo.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleReset = async () => {
+    setIsResetting(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await resetAdminProfileImage(token);
+      setMessage("Reverted to the default profile photo.");
+      setPreview("");
+      setCacheBust(Date.now());
+      await loadStatus();
+    } catch (resetError) {
+      setError(resetError.message || "Could not reset profile photo.");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  return (
+    <div className="glass-panel p-6">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+        <img
+          src={preview || `/api/profile-image?v=${cacheBust}`}
+          alt="Current profile"
+          className="h-28 w-28 shrink-0 rounded-2xl border border-slate-200/70 object-cover shadow-card dark:border-white/10"
+        />
+        <div className="min-w-0 flex-1 space-y-4">
+          <div>
+            <h3 className="text-lg font-black text-slate-950 dark:text-white">Profile Photo</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {status?.hasCustomImage
+                ? `Custom photo live since ${new Date(status.updatedAt).toLocaleString()}.`
+                : "Using the default portfolio photo."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="btn-secondary cursor-pointer">
+              Choose New Photo
+              <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+            </label>
+            <button className="btn-primary" type="button" disabled={!preview || isSaving} onClick={handleSave}>
+              {isSaving ? "Saving..." : "Save Photo"}
+            </button>
+            {status?.hasCustomImage && (
+              <button
+                className="btn-secondary text-rose-600 dark:text-rose-300"
+                type="button"
+                disabled={isResetting}
+                onClick={handleReset}
+              >
+                {isResetting ? "Resetting..." : "Reset to Default"}
+              </button>
+            )}
+          </div>
+
+          {error && <p className="form-error">{error}</p>}
+          {message && <p className="text-sm font-bold text-emerald-600 dark:text-emerald-300">{message}</p>}
+          <p className="text-xs text-slate-400 dark:text-slate-500">JPEG, PNG, or WebP. Automatically resized before upload.</p>
+        </div>
+      </div>
+    </div>
   );
 }
 

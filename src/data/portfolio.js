@@ -20,7 +20,7 @@ export const profile = {
   location: "Bangalore, Karnataka, India",
   resume: "/Aditaya_Kumar_Mishra_CV.docx",
   resumeLabel: "Aditaya Kumar Mishra CV",
-  image: "/Aditaya.png",
+  image: "/api/profile-image",
   github: "https://github.com/adityamishra52",
   linkedin: "https://www.linkedin.com/in/aditaya-kumar-mishra",
   intro:

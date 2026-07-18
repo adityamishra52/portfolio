@@ -305,7 +305,7 @@ function renderRouteHtml(baseHtml, route) {
   // each route either has no matching LCP image or (for project pages) a
   // different one, so keep this preload scoped to "/" only.
   if (route.path !== "/") {
-    html = html.replace(/\s*<link rel="preload" as="image" href="\/Aditaya\.png" fetchpriority="high" \/>\n?/, "\n");
+    html = html.replace(/\s*<link rel="preload" as="image" href="\/api\/profile-image" fetchpriority="high" \/>\n?/, "\n");
   }
 
   const routeSchema = {
