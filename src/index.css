@@ -38,12 +38,7 @@
   h4,
   p,
   li,
-  a,
-  button,
-  label,
-  span,
-  strong,
-  small {
+  label {
     overflow-wrap: anywhere;
   }
 
@@ -119,6 +114,10 @@
 
   .dark .hero-profile img {
     @apply border-white/20 ring-4 ring-slate-900/40;
+  }
+
+  .hero-stack-card {
+    bottom: 0.375rem !important;
   }
 
   .glass-card {
@@ -266,6 +265,19 @@
     transform: none;
   }
 
+  .btn-primary > svg,
+  .btn-secondary > svg,
+  .icon-btn > svg {
+    @apply shrink-0;
+  }
+
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .icon-btn:focus-visible,
+  .footer-link:focus-visible {
+    @apply outline-none ring-4 ring-teal-400/30;
+  }
+
   .icon-btn {
     @apply inline-grid h-11 w-11 place-items-center rounded-full border border-slate-200/80 bg-white/75 text-slate-900 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-teal-400/50 dark:border-white/10 dark:bg-white/10 dark:text-white;
   }
@@ -280,7 +292,7 @@
   }
 
   .footer-link {
-    @apply rounded-2xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white;
+    @apply flex min-h-11 items-center rounded-2xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white;
   }
 
   .contact-pill {
@@ -363,11 +375,23 @@
   }
 
   .hero-profile {
-    @apply min-h-[390px] p-5;
+    @apply flex min-h-0 flex-col justify-center p-5 pt-20;
   }
 
   .hero-profile img {
-    @apply w-[min(74%,270px)];
+    @apply w-[min(74%,270px)] shrink-0;
+  }
+
+  .hero-stack-card {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    margin-top: 1.25rem;
+  }
+
+  .hero-availability-badge {
+    top: 1rem;
+    right: 1rem;
   }
 
   .btn-primary,
@@ -383,6 +407,16 @@
 
   .tech-marquee-track {
     animation-duration: 24s;
+  }
+}
+
+@media (max-width: 380px) {
+  .icon-btn {
+    @apply h-10 w-10;
+  }
+
+  .hero-profile {
+    @apply px-4 pb-4;
   }
 }
 

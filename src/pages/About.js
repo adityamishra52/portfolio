@@ -75,6 +75,10 @@ function About() {
                 alt="Aditaya Kumar Mishra portrait"
                 loading="lazy"
                 decoding="async"
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = "/Aditaya.png";
+                }}
                 width="700"
                 height="700"
                 className="aspect-square w-full rounded-[2rem] border border-slate-200/60 object-cover shadow-card dark:border-white/10 dark:shadow-card-dark"

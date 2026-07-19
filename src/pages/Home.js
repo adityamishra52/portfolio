@@ -69,7 +69,7 @@ function Home() {
                   <Link className="btn-secondary" to="/contact" onClick={() => trackEvent("Navigation", "Menu Click", "Home Contact Me")}>
                     Contact Me <FiMail />
                   </Link>
-                  <div className="flex flex-col gap-3 sm:flex-row">
+                  <div className="flex min-w-0 flex-col gap-3 sm:flex-row">
                     {/* Resume analytics are tracked here for preview and explicit download actions. */}
                     <button
                       className="btn-secondary"
@@ -81,16 +81,14 @@ function Home() {
                     >
                       View CV <FiDownload />
                     </button>
-                    <button
+                    <a
                       className="btn-secondary"
-                      type="button"
-                      onClick={() => {
-                        setResumeOpen(true);
-                        trackEvent("Resume", "CV Popup Open", "Home Hero Download");
-                      }}
+                      href={profile.resume}
+                      download="Aditaya_Kumar_Mishra_CV.docx"
+                      onClick={() => trackEvent("Resume", "CV Download Click", "Home Hero Direct Download")}
                     >
                       Download CV <FiDownload />
-                    </button>
+                    </a>
                   </div>
                 </div>
               </motion.div>
@@ -109,14 +107,18 @@ function Home() {
                     loading="eager"
                     decoding="async"
                     fetchPriority="high"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = "/Aditaya.png";
+                    }}
                     width="700"
                     height="700"
                     className="relative z-10 max-w-full aspect-square object-cover"
                   />
-                  <div className="absolute right-6 top-6 rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm font-black text-teal-700 shadow-soft backdrop-blur dark:bg-slate-950/70 dark:text-teal-300">
+                  <div className="hero-availability-badge absolute right-6 top-6 rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm font-black text-teal-700 shadow-soft backdrop-blur dark:bg-slate-950/70 dark:text-teal-300">
                     Open to work
                   </div>
-                  <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-white/75 p-4 backdrop-blur dark:bg-slate-950/75">
+                  <div className="hero-stack-card absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-white/75 p-4 backdrop-blur dark:bg-slate-950/75">
                     <span className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">
                       Core stack
                     </span>

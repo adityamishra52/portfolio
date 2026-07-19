@@ -33,7 +33,7 @@ function ResumeModal({ open, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] grid place-items-center bg-slate-950/70 px-4 py-6 backdrop-blur-md"
+      className="fixed inset-0 z-[80] grid place-items-center bg-slate-950/70 p-2 backdrop-blur-md sm:px-4 sm:py-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="resume-modal-title"
@@ -42,7 +42,7 @@ function ResumeModal({ open, onClose }) {
       }}
     >
       <div
-        className={`w-full overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white text-slate-950 shadow-2xl dark:border-white/10 dark:bg-slate-950 dark:text-white ${
+        className={`max-h-[calc(100dvh-1rem)] w-full overflow-y-auto rounded-[1.75rem] border border-slate-200/80 bg-white text-slate-950 shadow-2xl dark:border-white/10 dark:bg-slate-950 dark:text-white sm:max-h-[calc(100dvh-3rem)] ${
           previewOpen ? "max-w-5xl" : "max-w-md"
         }`}
       >
@@ -95,7 +95,7 @@ function ResumeModal({ open, onClose }) {
                 <iframe
                   title={`${label} preview`}
                   src={viewerUrl}
-                  className="h-[70vh] min-h-[520px] w-full bg-white"
+                  className="h-[58dvh] min-h-[360px] w-full bg-white sm:h-[70vh] sm:min-h-[520px]"
                   loading="lazy"
                 />
               </div>

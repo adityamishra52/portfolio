@@ -8,7 +8,7 @@ function Navbar({ theme, onThemeToggle }) {
   const [open, setOpen] = useState(false);
 
   const linkClass = ({ isActive }) =>
-    `rounded-full px-4 py-2 text-sm font-semibold transition ${
+    `inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition ${
       isActive
         ? "bg-slate-950 text-white shadow-soft dark:bg-white dark:text-slate-950"
         : "text-slate-600 hover:bg-white/70 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
@@ -17,7 +17,7 @@ function Navbar({ theme, onThemeToggle }) {
   return (
     <header className="sticky top-3 z-50 mx-auto w-[min(1220px,calc(100%-20px))] sm:top-4 sm:w-[min(1220px,calc(100%-24px))]">
       <nav className="glass-panel flex items-center justify-between gap-3 px-3 py-3">
-        <Link to="/" className="flex min-w-0 items-center gap-3" onClick={() => { setOpen(false); trackEvent("Navigation", "Menu Click", "Brand Home"); }}>
+        <Link to="/" className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden" onClick={() => { setOpen(false); trackEvent("Navigation", "Menu Click", "Brand Home"); }}>
           <img
             src="/logo.png"
             alt="Aditaya Kumar Mishra logo"
@@ -25,7 +25,7 @@ function Navbar({ theme, onThemeToggle }) {
             width="48"
             height="48"
           />
-          <span className="min-w-0">
+          <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-black text-slate-950 dark:text-white sm:text-base">
               {profile.name}
             </span>
@@ -41,7 +41,7 @@ function Navbar({ theme, onThemeToggle }) {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <Link
             to="/hire-me"
             className="hidden rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-5 py-2.5 text-sm font-black text-white shadow-glow transition hover:-translate-y-0.5 sm:inline-flex"
@@ -61,6 +61,7 @@ function Navbar({ theme, onThemeToggle }) {
             }}
             aria-label="Toggle menu"
             aria-expanded={open}
+            aria-controls="mobile-navigation"
           >
             {open ? <FiX /> : <FiMenu />}
           </button>
@@ -68,7 +69,7 @@ function Navbar({ theme, onThemeToggle }) {
       </nav>
 
       {open && (
-        <div className="glass-panel mt-2 grid max-h-[calc(100vh-110px)] gap-2 overflow-y-auto p-3 lg:hidden">
+        <div id="mobile-navigation" className="glass-panel mt-2 grid max-h-[calc(100dvh-110px)] gap-2 overflow-y-auto p-3 lg:hidden">
           {navItems.map((item) => (
             <NavLink key={item.to} to={item.to} className={linkClass} onClick={() => { setOpen(false); trackEvent("Navigation", "Mobile Menu Click", item.label); }}>
               {item.label}

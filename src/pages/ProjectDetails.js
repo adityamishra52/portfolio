@@ -143,7 +143,7 @@ function ProjectDetails() {
         jsonLd={jsonLd}
       />
       <section className="page-section">
-        <Link className="mb-8 inline-flex items-center gap-2 text-sm font-black text-teal-700 dark:text-teal-300" to="/projects">
+        <Link className="-ml-3 mb-8 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-teal-700 transition hover:bg-teal-500/10 dark:text-teal-300" to="/projects">
           <FiArrowLeft /> Back to Projects
         </Link>
 
@@ -368,7 +368,7 @@ function ProjectDetails() {
               ? "Placeholder cards are shown until final OptiResume screenshots are added."
               : "Click any image to view larger."}
           </p>
-          <div className="mt-4 grid gap-4 grid-cols-2 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             {galleryItems.map((item, i) => (
               <button
                 key={`${item.src}-${item.label || i}`}
