@@ -23,7 +23,7 @@ function ProjectCard({ project, featured = false }) {
             src={project.preview || "/projects/fallback.svg"}
             alt={project.previewAlt || project.title}
             className="h-full w-full"
-            imageClassName="relative z-10 h-full w-full object-cover transition duration-700"
+            imageClassName="relative z-10 h-full w-full object-cover transition duration-700 group-hover:scale-105"
             maxHeight="280px"
             sizes={featured ? "(min-width: 1280px) 66vw, (min-width: 1024px) 58vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw"}
           />

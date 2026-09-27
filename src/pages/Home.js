@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { FiArrowRight, FiCheckCircle, FiDownload, FiExternalLink, FiMail, FiShield, FiTrendingUp, FiZap } from "react-icons/fi";
@@ -7,14 +7,13 @@ import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
 import ResumeModal from "../components/ResumeModal";
 import Reveal, { EASE_OUT } from "../components/Reveal";
+import AnimatedWords from "../components/AnimatedWords";
 import CountUp from "../components/CountUp";
 import TiltCard from "../components/TiltCard";
 import { deliveryHighlights, portfolioProof, profile, skills, techMarquee } from "../data/portfolio";
 import { projects } from "../data/projects";
 import useImagePreload from "../utils/useImagePreload";
 import { trackEvent } from "../lib/analytics";
-
-const nameWords = profile.name.split(" ");
 
 const typedRoles = [
   "AI-powered web apps",
@@ -34,11 +33,6 @@ const heroContainer = {
 const heroItem = {
   hidden: { opacity: 0, y: 22 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
-};
-
-const heroWord = {
-  hidden: { opacity: 0, y: "0.5em", filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE_OUT } },
 };
 
 const heroStats = [
@@ -96,14 +90,7 @@ function Home() {
                   Available for full-stack, AI app, and SEO-ready web projects
                 </motion.span>
                 <h1 className="fluid-title mt-6 text-balance font-black text-slate-950 dark:text-white">
-                  {nameWords.map((word, index) => (
-                    <Fragment key={word}>
-                      <motion.span className="inline-block" variants={heroWord}>
-                        {word}
-                      </motion.span>
-                      {index < nameWords.length - 1 && " "}
-                    </Fragment>
-                  ))}
+                  <AnimatedWords text={profile.name} />
                 </h1>
                 <motion.p variants={heroItem} className="mt-5 text-2xl font-black">
                   <span className="text-gradient-animated">{profile.role}</span>
