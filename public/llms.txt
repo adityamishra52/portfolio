@@ -35,6 +35,7 @@ React, Vite, TanStack Query, TanStack Router, TanStack Table, JavaScript, TypeSc
 
 ## Projects
 - BoostPilot AI: AI creator platform for media analysis, captions, hooks, hashtags, content suggestions, thumbnail ideas, reports, and platform optimization. URL: https://boostpilotai.vercel.app/
+- ShopEase: Full-stack e-commerce store for shirts and jeans in India with Next.js server-rendered pages, delivery checks by state and district, Razorpay payments and Pay on Delivery, order emails with tracking links, Google sign-in, an admin panel with analytics, and SEO (Schema.org product data, sitemap, Google Shopping feed). URL: https://shop-ease-mu-woad.vercel.app
 - OptiResume: AI-powered resume builder and optimization platform with resume creation, upload analysis, live preview, templates, dashboard, resume management, and PDF, DOCX, and HTML export. URL: https://optiresume-one.vercel.app
 - Portfolio Builder: AI-powered portfolio builder with landing page, guided setup, template selection, dashboard management, and no-code publishing. URL: https://portfolios-rho-six.vercel.app
 - Support Kindness / Care Contribution: Community impact platform with transparency reports, gallery, contact, and admin dashboard. URL: https://support-kindness.vercel.app/

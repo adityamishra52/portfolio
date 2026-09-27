@@ -22,6 +22,7 @@ const projectFilters = [
     label: "Community & Impact",
     match: (project) => ["Community Impact Platform", "Donation Platform"].includes(project.category),
   },
+  { key: "commerce", label: "E-commerce", match: (project) => project.category === "E-commerce Platform" },
   { key: "ml", label: "Machine Learning", match: (project) => project.category === "Machine Learning" },
 ];
 
@@ -59,7 +60,7 @@ function Projects() {
       <SEO
         title="Aditaya Projects"
         path="/projects"
-        description="Featured projects by Aditaya Kumar Mishra including BoostPilot AI, OptiResume, Portfolio Builder, Care Contribution, CharityVibe, and Stock Market Prediction ML."
+        description="Featured projects by Aditaya Kumar Mishra including BoostPilot AI, ShopEase, OptiResume, Portfolio Builder, Care Contribution, CharityVibe, and Stock Market Prediction ML."
         keywords={["Aditaya projects", "Aditaya portfolio projects", "Aditaya Kumar Mishra projects", "Aditaya MERN projects", "Aditaya AI projects"]}
       />
       <section className="page-section">

@@ -297,6 +297,8 @@ export const seoKeywords = [
   "Personal Portfolio",
   "Professional Portfolio",
   "BoostPilot AI",
+  "ShopEase",
+  "E-commerce Developer",
   "Support Kindness",
   "Care Contribution",
   "CharityVibe",

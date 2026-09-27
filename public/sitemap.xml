@@ -3,7 +3,7 @@
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://aditaya-portfolio.vercel.app/</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -25,7 +25,7 @@
   </url>
   <url>
     <loc>https://aditaya-portfolio.vercel.app/projects</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.96</priority>
   </url>
@@ -37,6 +37,32 @@
     <image:image>
       <image:loc>https://aditaya-portfolio.vercel.app/projects/boostpilot-ai-dashboard.png</image:loc>
       <image:title>BoostPilot AI by Aditaya Kumar Mishra</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://aditaya-portfolio.vercel.app/projects/shopease</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/shopease-home.png</image:loc>
+      <image:title>ShopEase online store home page by Aditaya Kumar Mishra</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/shopease-category.png</image:loc>
+      <image:title>ShopEase shirts category page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/shopease-product.png</image:loc>
+      <image:title>ShopEase product page with share menu</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/shopease-cart.png</image:loc>
+      <image:title>ShopEase shopping cart</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://aditaya-portfolio.vercel.app/projects/shopease-login.png</image:loc>
+      <image:title>ShopEase sign-in page with Google sign-in and forgot password</image:title>
     </image:image>
   </url>
   <url>

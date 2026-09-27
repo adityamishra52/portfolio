@@ -78,6 +78,16 @@ const projectMeta = [
     imageAlt: "BoostPilot AI content analysis dashboard",
   },
   {
+    slug: "shopease",
+    title: "ShopEase",
+    category: "E-commerce Platform",
+    description:
+      "Full-stack e-commerce store for shirts and jeans across India, with delivery checks by state and district, Razorpay online payments and Pay on Delivery, order tracking emails, a PIN-protected admin panel, and search-engine-ready pages.",
+    tech: ["Next.js 16", "React 19", "Tailwind CSS", "Node.js", "Express", "MongoDB", "Mongoose", "Razorpay", "Google Sign-In", "JWT", "Brevo Email", "Schema.org SEO", "Vercel", "Render"],
+    image: "/projects/shopease-home.png",
+    imageAlt: "ShopEase online store home page with shirts and jeans banner",
+  },
+  {
     slug: "optiresume",
     title: "OptiResume",
     category: "AI Resume Builder",
