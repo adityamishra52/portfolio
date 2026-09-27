@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
+import optimizedImage from "../utils/optimizedImage";
+
+const FALLBACK_SRC = "/projects/fallback.svg";
 
 export default function Lightbox({ images = [], index = 0, open = false, onClose = () => {} }) {
   const [currentIndex, setCurrentIndex] = useState(index);
-  const [failed, setFailed] = useState(false);
+  // 0: WebP copy, 1: original file, 2: placeholder
+  const [attempt, setAttempt] = useState(0);
   const imageCount = images.length;
 
   useEffect(() => {
     setCurrentIndex(index);
-    setFailed(false);
+    setAttempt(0);
   }, [index, open]);
 
   useEffect(() => {
-    setFailed(false);
+    setAttempt(0);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -30,7 +34,9 @@ export default function Lightbox({ images = [], index = 0, open = false, onClose
 
   if (!open) return null;
 
-  const src = failed ? "/projects/fallback.svg" : images[currentIndex] || "/projects/fallback.svg";
+  const original = images[currentIndex] || FALLBACK_SRC;
+  const candidates = [...new Set([optimizedImage(original), original, FALLBACK_SRC])];
+  const src = candidates[Math.min(attempt, candidates.length - 1)];
   const showControls = imageCount > 1;
 
   return (
@@ -73,7 +79,7 @@ export default function Lightbox({ images = [], index = 0, open = false, onClose
           src={src}
           alt="Project screenshot"
           className="max-h-[82vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
-          onError={() => setFailed(true)}
+          onError={() => setAttempt((value) => Math.min(value + 1, candidates.length - 1))}
         />
         {showControls && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-bold text-white">

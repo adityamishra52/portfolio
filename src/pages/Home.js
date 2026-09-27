@@ -324,7 +324,7 @@ function Home() {
               </div>
               <div className="relative min-h-64 bg-slate-950/20 p-5 lg:p-6">
                 <img
-                  src="/projects/portfolio-builder-dashboard.png"
+                  src="/projects/portfolio-builder-dashboard.webp"
                   alt="Portfolio Builder dashboard preview"
                   loading="lazy"
                   decoding="async"

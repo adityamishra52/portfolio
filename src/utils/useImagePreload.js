@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import optimizedImage from "./optimizedImage";
 
 export default function useImagePreload(sources) {
-  const preloadKey = (sources || []).filter(Boolean).join("|");
+  // Preload the same files ProjectImage shows (the WebP copies), so nothing downloads twice
+  const preloadKey = (sources || []).filter(Boolean).map(optimizedImage).join("|");
 
   useEffect(() => {
-    const imageSources = [...new Set((sources || []).filter(Boolean))];
+    const imageSources = [...new Set(preloadKey.split("|").filter(Boolean))];
     const preloadLinks = [];
 
     imageSources.forEach((href, index) => {

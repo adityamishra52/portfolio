@@ -188,7 +188,7 @@ const routes = [
     path: "/projects",
     title: "Aditaya Projects",
     description:
-      "Featured projects by Aditaya Kumar Mishra including BoostPilot AI, OptiResume, Portfolio Builder, Care Contribution, CharityVibe, and Stock Market Prediction ML.",
+      "Featured projects by Aditaya Kumar Mishra including BoostPilot AI, ShopEase, OptiResume, Portfolio Builder, Care Contribution, CharityVibe, and Stock Market Prediction ML.",
     keywords: ["Aditaya projects", "Aditaya portfolio projects", "Aditaya Kumar Mishra projects", "Aditaya MERN projects", "Aditaya AI projects"],
     schemaType: "WebPage",
   },
@@ -316,6 +316,13 @@ function renderRouteHtml(baseHtml, route) {
   // different one, so keep this preload scoped to "/" only.
   if (route.path !== "/") {
     html = html.replace(/\s*<link rel="preload" as="image" href="\/hero-desk\.webp" type="image\/webp" fetchpriority="high" \/>\n?/, "\n");
+  }
+
+  // Project pages: start downloading the main screenshot (its WebP copy, which the page shows)
+  // while the app's JavaScript is still loading.
+  if (route.path.startsWith("/projects/") && /^\/projects\/.+\.(png|jpe?g)$/i.test(route.image || "")) {
+    const preview = route.image.replace(/\.(png|jpe?g)$/i, ".webp");
+    html = html.replace("</head>", `  <link rel="preload" as="image" href="${preview}" type="image/webp" fetchpriority="high" />\n  </head>`);
   }
 
   const routeSchema = {
