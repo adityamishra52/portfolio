@@ -10,6 +10,7 @@ import Reveal, { EASE_OUT } from "../components/Reveal";
 import AnimatedWords from "../components/AnimatedWords";
 import CountUp from "../components/CountUp";
 import TiltCard from "../components/TiltCard";
+import HeroPortraitCarousel from "../components/HeroPortraitCarousel";
 import { deliveryHighlights, portfolioProof, profile, skills, techMarquee } from "../data/portfolio";
 import { projects } from "../data/projects";
 import useImagePreload from "../utils/useImagePreload";
@@ -178,20 +179,7 @@ function Home() {
                   <div className="hero-profile glass-panel">
                     <div className="absolute inset-8 rounded-3xl border border-slate-200/70 bg-grid opacity-70 dark:border-white/10" />
                     <div className="profile-ring">
-                      <img
-                        src={profile.image}
-                        alt="Aditaya Kumar Mishra"
-                        loading="eager"
-                        decoding="async"
-                        fetchPriority="high"
-                        onError={(event) => {
-                          event.currentTarget.onerror = null;
-                          event.currentTarget.src = "/Aditaya.png";
-                        }}
-                        width="700"
-                        height="700"
-                        className="object-cover"
-                      />
+                      <HeroPortraitCarousel />
                     </div>
                     <div className="hero-availability-badge float-soft absolute right-6 top-6 inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/70 px-4 py-3 text-sm font-black text-teal-700 shadow-soft backdrop-blur dark:bg-slate-950/70 dark:text-teal-300">
                       <LiveDot />

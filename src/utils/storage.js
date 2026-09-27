@@ -147,20 +147,23 @@ export const exportAdminMessages = async (token, params, format = "csv") => {
   return response.blob();
 };
 
-export const getAdminProfileImage = async (token) =>
-  requestJson("/api/admin/profile-image", {
+// slot: "profile" (About portrait) or "anime" (Home hero GIF/video slide).
+const adminMediaUrl = (slot) => `/api/admin/profile-image${slot && slot !== "profile" ? `?slot=${slot}` : ""}`;
+
+export const getAdminProfileImage = async (token, slot) =>
+  requestJson(adminMediaUrl(slot), {
     headers: buildAdminHeaders(token, false),
   });
 
-export const updateAdminProfileImage = async (token, imageDataUrl) =>
-  requestJson("/api/admin/profile-image", {
+export const updateAdminProfileImage = async (token, imageDataUrl, slot) =>
+  requestJson(adminMediaUrl(slot), {
     method: "POST",
     headers: buildAdminHeaders(token),
     body: JSON.stringify({ image: imageDataUrl }),
   });
 
-export const resetAdminProfileImage = async (token) =>
-  requestJson("/api/admin/profile-image", {
+export const resetAdminProfileImage = async (token, slot) =>
+  requestJson(adminMediaUrl(slot), {
     method: "DELETE",
     headers: buildAdminHeaders(token, false),
   });

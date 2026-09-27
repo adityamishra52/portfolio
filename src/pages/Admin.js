@@ -656,6 +656,7 @@ function Admin() {
                     <h2 className="page-title">Environment and deployment notes</h2>
                   </div>
                   <ProfileImageManager token={token} />
+                  <HeroAnimationManager token={token} />
                   <div className="grid gap-4 lg:grid-cols-2">
                     {[
                       "Use JWT_SECRET to sign admin sessions. ADMIN_KEY can be set separately for the admin secret.",
@@ -826,7 +827,7 @@ function ProfileImageManager({ token }) {
 
     try {
       await updateAdminProfileImage(token, preview);
-      setMessage("Profile photo updated. It's now live on Home and About.");
+      setMessage("Profile photo updated. It's now live on the About page.");
       setPreview("");
       setCacheBust(Date.now());
       await loadStatus();
@@ -896,6 +897,159 @@ function ProfileImageManager({ token }) {
           {error && <p className="form-error">{error}</p>}
           {message && <p className="text-sm font-bold text-emerald-600 dark:text-emerald-300">{message}</p>}
           <p className="text-xs text-slate-400 dark:text-slate-500">JPEG, PNG, or WebP. Automatically resized before upload.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const MAX_HERO_ANIMATION_BYTES = 3 * 1024 * 1024;
+const HERO_ANIMATION_TYPES = ["image/gif", "image/webp", "image/png", "image/jpeg", "video/mp4", "video/webm"];
+
+// Uploaded as-is: re-encoding through a canvas would drop the animation.
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read the selected file."));
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+
+function HeroAnimationManager({ token }) {
+  const [status, setStatus] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [cacheBust, setCacheBust] = useState(() => Date.now());
+
+  const loadStatus = async () => {
+    try {
+      const result = await getAdminProfileImage(token, "anime");
+      setStatus(result);
+    } catch (loadError) {
+      setError(loadError.message || "Could not load hero animation status.");
+    }
+  };
+
+  useEffect(() => {
+    if (token) loadStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setMessage("");
+    setError("");
+
+    if (!HERO_ANIMATION_TYPES.includes(file.type)) {
+      setError("Please choose a GIF, WebP, PNG, JPEG, MP4, or WebM file.");
+      return;
+    }
+
+    if (file.size > MAX_HERO_ANIMATION_BYTES) {
+      setError(`That file is ${(file.size / 1024 / 1024).toFixed(1)}MB. Please keep it under 3MB.`);
+      return;
+    }
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      setPreview({ dataUrl, isVideo: file.type.startsWith("video/") });
+    } catch (readError) {
+      setError(readError.message || "Could not read that file.");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!preview) return;
+    setIsSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await updateAdminProfileImage(token, preview.dataUrl, "anime");
+      setMessage("Hero animation updated. It's now live in the Home hero slider.");
+      setPreview(null);
+      setCacheBust(Date.now());
+      await loadStatus();
+    } catch (saveError) {
+      setError(saveError.message || "Could not update hero animation.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleReset = async () => {
+    setIsResetting(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await resetAdminProfileImage(token, "anime");
+      setMessage("Reverted to the default anime image.");
+      setPreview(null);
+      setCacheBust(Date.now());
+      await loadStatus();
+    } catch (resetError) {
+      setError(resetError.message || "Could not reset hero animation.");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const liveIsVideo = Boolean(status?.contentType?.startsWith("video/"));
+  const showVideo = preview ? preview.isVideo : liveIsVideo;
+  const src = preview?.dataUrl || `/api/profile-image?slot=anime&v=${cacheBust}`;
+  const mediaClass = "h-28 w-28 shrink-0 rounded-full border border-slate-200/70 object-cover shadow-card dark:border-white/10";
+
+  return (
+    <div className="glass-panel p-6">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+        {showVideo ? (
+          <video key={src} src={src} className={mediaClass} autoPlay muted loop playsInline aria-label="Hero animation preview" />
+        ) : (
+          <img key={src} src={src} alt="Current hero animation" className={mediaClass} />
+        )}
+        <div className="min-w-0 flex-1 space-y-4">
+          <div>
+            <h3 className="text-lg font-black text-slate-950 dark:text-white">Hero Animation</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {status?.hasCustomImage
+                ? `Custom ${liveIsVideo ? "video" : "animation"} live since ${new Date(status.updatedAt).toLocaleString()}.`
+                : "Using the default anime image."}{" "}
+              Plays as the second slide in the Home hero, after the photo.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="btn-secondary cursor-pointer">
+              Choose GIF or Video
+              <input type="file" accept={HERO_ANIMATION_TYPES.join(",")} className="hidden" onChange={handleFileChange} />
+            </label>
+            <button className="btn-primary" type="button" disabled={!preview || isSaving} onClick={handleSave}>
+              {isSaving ? "Uploading..." : "Save Animation"}
+            </button>
+            {status?.hasCustomImage && (
+              <button
+                className="btn-secondary text-rose-600 dark:text-rose-300"
+                type="button"
+                disabled={isResetting}
+                onClick={handleReset}
+              >
+                {isResetting ? "Resetting..." : "Reset to Default"}
+              </button>
+            )}
+          </div>
+
+          {error && <p className="form-error">{error}</p>}
+          {message && <p className="text-sm font-bold text-emerald-600 dark:text-emerald-300">{message}</p>}
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            GIF, animated WebP, MP4, or WebM up to 3MB. Square works best; it's cropped to a circle. Videos play muted and loop.
+          </p>
         </div>
       </div>
     </div>

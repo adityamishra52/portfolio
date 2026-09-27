@@ -132,12 +132,31 @@
     opacity: 0.5;
   }
 
-  .hero-profile img {
-    @apply relative z-10 aspect-square w-full rounded-full border-4 border-white/30 object-cover shadow-2xl;
+  .hero-profile .portrait-frame {
+    @apply relative z-10 block aspect-square w-full cursor-pointer overflow-hidden rounded-full border-4 border-white/30 p-0 shadow-2xl;
+    isolation: isolate;
   }
 
-  .dark .hero-profile img {
+  .dark .hero-profile .portrait-frame {
     @apply border-white/20 ring-4 ring-slate-900/40;
+  }
+
+  .portrait-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Radar-style reveal: --sweep is animated 0deg -> 360deg on the frame. */
+  .portrait-layer.is-incoming {
+    z-index: 2;
+    -webkit-mask-image: conic-gradient(#000 var(--sweep), transparent calc(var(--sweep) + 0.6deg));
+    mask-image: conic-gradient(#000 var(--sweep), transparent calc(var(--sweep) + 0.6deg));
+  }
+
+  /* After the dark rule: same specificity, so order decides. */
+  .hero-profile .portrait-frame:focus-visible {
+    @apply outline-none ring-4 ring-teal-400/60;
   }
 
   .hero-stack-card {
