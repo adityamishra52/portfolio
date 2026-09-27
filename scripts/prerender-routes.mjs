@@ -162,7 +162,7 @@ const routes = [
     path: "/about",
     title: "About Aditaya Kumar Mishra",
     description:
-      "About Aditaya Kumar Mishra, also known as Aditaya and Aditya Mishra. Full Stack MERN Developer focused on React, Vite, Node.js, MongoDB, AI web apps, SEO, testing, and modern product delivery.",
+      "About Aditaya Kumar Mishra, also known as Aditaya and Aditya Mishra. Full Stack Developer focused on React, TanStack Query, Node.js, Python, FastAPI, MongoDB, Supabase, AI web apps, SEO, testing, and modern product delivery.",
     keywords: ["About Aditaya", "Aditaya Mishra about", "Aditya Mishra about", "Aditaya Kumar Mishra bio", "Aditaya developer profile"],
     schemaType: "AboutPage",
   },
@@ -170,7 +170,7 @@ const routes = [
     path: "/skills",
     title: "Aditaya Skills",
     description:
-      "Skills of Aditaya Kumar Mishra across React, Vite, Tailwind CSS, Node.js, Express, MongoDB, SEO, deployment, AI web app development, testing, and MERN projects.",
+      "Skills of Aditaya Kumar Mishra across React, Vite, TanStack Query, Tailwind CSS, Node.js, Express, Python, FastAPI, MongoDB, Supabase, SEO, deployment, AI web app development, testing, and MERN projects.",
     keywords: ["Aditaya skills", "Aditaya developer skills", "Aditaya React skills", "Aditaya MERN skills", "Aditaya SEO skills"],
     schemaType: "WebPage",
   },

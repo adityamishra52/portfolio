@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { skills } from "../data/portfolio";
 import { FaReact, FaNode, FaDatabase, FaGithub, FaPython } from "react-icons/fa";
-import { SiTypescript, SiMongodb, SiTailwindcss, SiExpress } from "react-icons/si";
+import { SiTypescript, SiMongodb, SiTailwindcss, SiExpress, SiReactquery, SiFastapi, SiSupabase, SiVite } from "react-icons/si";
 
 function Skills() {
   const containerVariants = {
@@ -43,12 +43,16 @@ function Skills() {
 
   const topTechnologies = [
     { icon: FaReact, name: "React.js", color: "text-cyan-500" },
-    { icon: SiExpress, name: "Express.js", color: "text-gray-600 dark:text-gray-300" },
-    { icon: FaNode, name: "Node.js", color: "text-green-600" },
-    { icon: SiMongodb, name: "MongoDB", color: "text-green-500" },
-    { icon: SiTailwindcss, name: "Tailwind CSS", color: "text-cyan-400" },
+    { icon: SiReactquery, name: "TanStack Query", color: "text-rose-500" },
+    { icon: SiVite, name: "Vite", color: "text-violet-500" },
     { icon: SiTypescript, name: "TypeScript", color: "text-blue-600" },
+    { icon: SiTailwindcss, name: "Tailwind CSS", color: "text-cyan-400" },
+    { icon: FaNode, name: "Node.js", color: "text-green-600" },
+    { icon: SiExpress, name: "Express.js", color: "text-gray-600 dark:text-gray-300" },
     { icon: FaPython, name: "Python", color: "text-blue-500" },
+    { icon: SiFastapi, name: "FastAPI", color: "text-teal-500" },
+    { icon: SiMongodb, name: "MongoDB", color: "text-green-500" },
+    { icon: SiSupabase, name: "Supabase", color: "text-emerald-500" },
     { icon: FaGithub, name: "GitHub", color: "text-slate-700 dark:text-slate-300" },
   ];
 
@@ -57,7 +61,7 @@ function Skills() {
       <SEO
         title="Aditaya Skills"
         path="/skills"
-        description="Skills of Aditaya Kumar Mishra across React, Vite, Tailwind CSS, Node.js, Express, MongoDB, SEO, deployment, AI web app development, testing, and MERN projects."
+        description="Skills of Aditaya Kumar Mishra across React, Vite, TanStack Query, Tailwind CSS, Node.js, Express, Python, FastAPI, MongoDB, Supabase, SEO, deployment, AI web app development, testing, and MERN projects."
         keywords={["Aditaya skills", "Aditaya developer skills", "Aditaya React skills", "Aditaya MERN skills", "Aditaya SEO skills"]}
       />
 
@@ -80,13 +84,13 @@ function Skills() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-2xl font-bold text-slate-950 dark:text-white">Currently Working With</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
             {topTechnologies.map((tech, idx) => {
               const Icon = tech.icon;
               return (
                 <motion.div
                   key={tech.name}
-                  className="group flex flex-col items-center gap-3 rounded-xl border border-slate-200/50 bg-white/50 p-4 text-center transition hover:border-teal-400/50 hover:bg-teal-50/50 dark:border-white/10 dark:bg-white/5 dark:hover:bg-teal-950/20"
+                  className="spotlight group flex flex-col items-center gap-3 rounded-xl border border-slate-200/50 bg-white/50 p-4 text-center transition hover:border-teal-400/50 hover:bg-teal-50/50 dark:border-white/10 dark:bg-white/5 dark:hover:bg-teal-950/20"
                   whileHover={{ y: -4 }}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -152,11 +156,11 @@ function Skills() {
         >
           <div className="rounded-2xl border border-teal-400/30 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 p-6 dark:border-teal-400/20 dark:from-teal-950/30 dark:to-cyan-950/30">
             <h3 className="mb-3 font-bold text-teal-900 dark:text-teal-200">Web Development</h3>
-            <p className="text-sm text-teal-800 dark:text-teal-300">React, Vue, Vite, Tailwind CSS, responsive design, accessibility, and modern frontend practices.</p>
+            <p className="text-sm text-teal-800 dark:text-teal-300">React, Vue, Vite, TanStack Query, Router &amp; Table, Tailwind CSS, responsive design, accessibility, and modern frontend practices.</p>
           </div>
           <div className="rounded-2xl border border-blue-400/30 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 p-6 dark:border-blue-400/20 dark:from-blue-950/30 dark:to-indigo-950/30">
             <h3 className="mb-3 font-bold text-blue-900 dark:text-blue-200">Backend & APIs</h3>
-            <p className="text-sm text-blue-800 dark:text-blue-300">Node.js, Express, REST APIs, authentication, server optimization, database integration, and deployment.</p>
+            <p className="text-sm text-blue-800 dark:text-blue-300">Node.js, Express, Python, FastAPI, Supabase, REST APIs, authentication, server optimization, database integration, and deployment.</p>
           </div>
           <div className="rounded-2xl border border-purple-400/30 bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-6 dark:border-purple-400/20 dark:from-purple-950/30 dark:to-pink-950/30">
             <h3 className="mb-3 font-bold text-purple-900 dark:text-purple-200">Data & SEO</h3>

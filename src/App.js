@@ -1,7 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { MotionConfig, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ScrollProgress from "./components/ScrollProgress";
+import CursorGlow from "./components/CursorGlow";
+import { EASE_OUT } from "./components/Reveal";
 import { initAnalytics, trackPageView } from "./lib/analytics";
 import { initClarity } from "./lib/clarity";
 
@@ -41,24 +45,33 @@ function AppShell({ theme, onThemeToggle }) {
   return (
     <div className="min-h-screen">
       <div className="fixed inset-0 -z-10 bg-page" />
+      {!isAdmin && <CursorGlow />}
+      {!isAdmin && <ScrollProgress />}
       <ScrollToTop />
       {!isAdmin && <Navbar theme={theme} onThemeToggle={onThemeToggle} />}
       <main>
         <Suspense fallback={<div className="page-section text-slate-950 dark:text-white">Loading page...</div>}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/skills" element={<Skills />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:slug" element={<ProjectDetails />} />
-            <Route path="/experience" element={<Experience />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/hire-me" element={<HireMe />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/admin-aditaya" element={<Admin />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: EASE_OUT }}
+          >
+            <Routes location={location}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/skills" element={<Skills />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:slug" element={<ProjectDetails />} />
+              <Route path="/experience" element={<Experience />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/hire-me" element={<HireMe />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/admin-aditaya" element={<Admin />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </motion.div>
         </Suspense>
       </main>
       {!isAdmin && <Footer />}
@@ -94,9 +107,11 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <AppShell theme={theme} onThemeToggle={() => setTheme((value) => (value === "dark" ? "light" : "dark"))} />
-    </BrowserRouter>
+    <MotionConfig reducedMotion="user">
+      <BrowserRouter>
+        <AppShell theme={theme} onThemeToggle={() => setTheme((value) => (value === "dark" ? "light" : "dark"))} />
+      </BrowserRouter>
+    </MotionConfig>
   );
 }
 

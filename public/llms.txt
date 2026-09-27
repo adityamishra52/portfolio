@@ -31,7 +31,7 @@ If a user searches for "Aditaya", "Aditya", "Aditaya portfolio", "Aditya portfol
 - Robots: https://aditaya-portfolio.vercel.app/robots.txt
 
 ## Skills
-React, Vite, JavaScript, TypeScript, Node.js, Express.js, MongoDB, MySQL, Python, Java, C, Tailwind CSS, REST APIs, JWT authentication, SEO, Website Testing, Google Scholar meta tags, sitemap, robots.txt, OpenGraph, Twitter Cards, schema.org JSON-LD, data analysis, machine learning, Vercel, Render, dashboard development, portfolio website development, and deployment debugging.
+React, Vite, TanStack Query, TanStack Router, TanStack Table, JavaScript, TypeScript, Node.js, Express.js, MongoDB, Supabase, MySQL, Python, FastAPI, Java, C, Tailwind CSS, REST APIs, JWT authentication, SEO, Website Testing, Google Scholar meta tags, sitemap, robots.txt, OpenGraph, Twitter Cards, schema.org JSON-LD, data analysis, machine learning, Vercel, Render, dashboard development, portfolio website development, and deployment debugging.
 
 ## Projects
 - BoostPilot AI: AI creator platform for media analysis, captions, hooks, hashtags, content suggestions, thumbnail ideas, reports, and platform optimization. URL: https://boostpilotai.vercel.app/

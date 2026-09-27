@@ -1,8 +1,33 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiBriefcase, FiClock, FiGlobe, FiLayers, FiMapPin, FiZap } from "react-icons/fi";
+import { FaNode, FaReact } from "react-icons/fa";
+import {
+  SiExpress,
+  SiFastapi,
+  SiMongodb,
+  SiPython,
+  SiReactquery,
+  SiSupabase,
+  SiTailwindcss,
+  SiTypescript,
+} from "react-icons/si";
 import SEO from "../components/SEO";
+import CountUp from "../components/CountUp";
+import { EASE_OUT } from "../components/Reveal";
 import { profile, professionalProfile } from "../data/portfolio";
+
+const aboutStack = [
+  { name: "React", icon: FaReact, color: "text-cyan-500" },
+  { name: "TanStack Query", icon: SiReactquery, color: "text-rose-500" },
+  { name: "TypeScript", icon: SiTypescript, color: "text-blue-600" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-sky-400" },
+  { name: "Node.js", icon: FaNode, color: "text-green-600" },
+  { name: "Express", icon: SiExpress, color: "text-slate-700 dark:text-slate-300" },
+  { name: "Python", icon: SiPython, color: "text-blue-500" },
+  { name: "FastAPI", icon: SiFastapi, color: "text-teal-500" },
+  { name: "MongoDB", icon: SiMongodb, color: "text-green-500" },
+  { name: "Supabase", icon: SiSupabase, color: "text-emerald-500" },
+];
 
 const infoCards = [
   { label: "Availability", value: professionalProfile.availability, icon: FiBriefcase },
@@ -14,29 +39,10 @@ const infoCards = [
 ];
 
 function Counter({ value, suffix, label }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    const totalFrames = 36;
-    const interval = window.setInterval(() => {
-      frame += 1;
-      const progress = Math.min(frame / totalFrames, 1);
-      setCount(Math.round(value * progress));
-
-      if (progress >= 1) {
-        window.clearInterval(interval);
-      }
-    }, 28);
-
-    return () => window.clearInterval(interval);
-  }, [value]);
-
   return (
     <div className="glass-card p-5">
       <strong className="block text-4xl font-black text-slate-950 dark:text-white">
-        {count}
-        {suffix}
+        <CountUp to={value} suffix={suffix} />
       </strong>
       <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{label}</p>
     </div>
@@ -49,7 +55,7 @@ function About() {
       <SEO
         title="About Aditaya Kumar Mishra"
         path="/about"
-        description="About Aditaya Kumar Mishra, also known as Aditaya and Aditya Mishra. Full Stack MERN Developer focused on React, Vite, Node.js, MongoDB, AI web apps, SEO, testing, and modern product delivery."
+        description="About Aditaya Kumar Mishra, also known as Aditaya and Aditya Mishra. Full Stack Developer focused on React, TanStack Query, Node.js, Python, FastAPI, MongoDB, Supabase, AI web apps, SEO, testing, and modern product delivery."
         keywords={["About Aditaya", "Aditaya Mishra about", "Aditya Mishra about", "Aditaya Kumar Mishra bio", "Aditaya developer profile"]}
       />
       <section className="page-section">
@@ -96,7 +102,7 @@ function About() {
             <div className="glass-panel p-6 md:p-8">
               <div className="space-y-6 text-base leading-8 text-slate-600 dark:text-slate-300">
                 <p>
-                  I&apos;m a Full Stack Developer and MERN specialist building premium web applications with React, Vite, Node.js, Express, MongoDB, and Tailwind CSS. I care about clean architecture, smooth interactions, and professional product presentation.
+                  I&apos;m a Full Stack Developer and MERN specialist building premium web applications with React, Vite, TanStack Query, Node.js, Express, MongoDB, and Tailwind CSS. On the Python side, I build fast REST APIs with FastAPI and ship auth-ready, Postgres-backed apps on Supabase. I care about clean architecture, smooth interactions, and professional product presentation.
                 </p>
                 <p>
                   My work emphasizes production-ready frontend systems, dependable backend workflows, meaningful dashboards, image handling, routing quality, technical SEO, and cross-browser reliability that teams can trust.
@@ -107,6 +113,30 @@ function About() {
                 <p>
                   Beyond coding, I enjoy solving practical problems through technology, supporting cleaner release quality, and building experiences that feel calm, premium, and easy to understand.
                 </p>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6 md:p-8">
+              <span className="text-xs font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">Tech I work with</span>
+              <h2 className="mt-2 text-2xl font-black text-slate-950 dark:text-white">From React frontends to Python APIs</h2>
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                {aboutStack.map((tech, index) => {
+                  const Icon = tech.icon;
+                  return (
+                    <motion.div
+                      key={tech.name}
+                      className="spotlight flex flex-col items-center gap-2 rounded-2xl border border-slate-200/70 bg-white/60 p-4 text-center dark:border-white/10 dark:bg-white/5"
+                      initial={{ opacity: 0, y: 16, scale: 0.92 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      whileHover={{ y: -5 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.45, delay: index * 0.04, ease: EASE_OUT }}
+                    >
+                      <Icon className={`text-3xl ${tech.color}`} aria-hidden="true" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{tech.name}</span>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
 
